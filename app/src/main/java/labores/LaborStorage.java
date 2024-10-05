@@ -9,7 +9,7 @@ public class LaborStorage {
     public static void addLabor(Labor labor) {
         for (Labor l : labores) {
             if (l.getNombre().equals(labor.getNombre()) && l.getFecha().equals(labor.getFecha())) {
-                // Ya existe la labor, no la agregues de nuevo
+
                 return;
             }
         }
@@ -17,7 +17,7 @@ public class LaborStorage {
     }
 
     public static List<Labor> getLabores() {
-        return new ArrayList<>(labores);  // Retorna una nueva copia de la lista para evitar modificaciones externas
+        return new ArrayList<>(labores);
     }
 }
 

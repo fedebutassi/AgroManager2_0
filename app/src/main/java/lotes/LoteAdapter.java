@@ -2,7 +2,7 @@ package lotes;
 
 //**muestra los datos de los lotes en un RecyclerView**//
 
-import static lotes.NuevoLoteActivity.listaLotes;
+
 
 import android.content.Intent;
 import android.net.Uri;

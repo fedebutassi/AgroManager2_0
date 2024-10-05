@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="0dp">
 
-    <!-- Incluimos la Toolbar personalizada -->
+    <!-- Toolbar personalizada -->
     <include
         layout="@layout/custom_toolbar"
         android:layout_width="match_parent"
@@ -53,9 +53,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp" />
-
-
-
 
     <!-- Botón Guardar -->
     <Button

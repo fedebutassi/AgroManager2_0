@@ -6,9 +6,7 @@ import android.view.MenuItem;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +15,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import labores.LaboresActivity;
-import lotes.Lote;
-import lotes.LoteStorage;
 import lotes.NuevoLoteActivity;
 
 

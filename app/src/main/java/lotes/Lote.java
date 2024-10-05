@@ -9,14 +9,14 @@ public class Lote {
     private String superficie;
     private LatLng ubicacion; // Añadir la ubicación
 
-    // Constructor que incluye la ubicación
+
     public Lote(String nombre, String superficie, LatLng ubicacion) {
         this.nombre = nombre;
         this.superficie = superficie;
         this.ubicacion = ubicacion;
     }
 
-    // Getters para los datos
+
     public String getNombre() {
         return nombre;
     }
