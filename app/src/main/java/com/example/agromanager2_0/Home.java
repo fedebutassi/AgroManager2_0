@@ -76,7 +76,10 @@ public class Home extends AppCompatActivity {
         intent.putExtra("tipo", tipo);
         startActivity(intent);
     }
-
+    /*Implementacion de menu desplegable con botones
+    *   "Configuracion"
+    *   "Editar perfil"
+    *   "Cerrar sesion"*/
     private void showBottomSheetDialog2(View view2){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
