@@ -86,19 +86,45 @@
         app:srcCompat="@drawable/lotes"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <ImageButton
-        android:id="@+id/imageButton5"
-        android:layout_width="56dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="#2196F3"
-        android:scaleType="fitCenter"
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="3dp"
+        tools:ignore="MissingConstraints"
+        android:background="#4CAF50"
+
+
+        />
+
+    <Button
+        android:id="@+id/menuSuperior"
+        android:layout_width="59dp"
+        android:layout_height="56dp"
+        app:cornerRadius="30dp"
+        android:text="x"
+        app:layout_constraintBottom_toBottomOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.949"
+        app:layout_constraintStart_toStartOf="@+id/view2"
+        app:layout_constraintTop_toTopOf="@+id/view2"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/signomas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        app:layout_constraintTop_toTopOf="@+id/view"
-        app:srcCompat="@drawable/agregar"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintVertical_bias="0.973"
+        android:scaleType="center"
+        android:src="@drawable/signomas"
+        android:contentDescription="@string/add_item"
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,5 @@ public class FormActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.textViewTipo);
         textView.setText("Formulario para: " + tipo);
 
-        // Aquí puedes agregar más campos de formulario según el tipo.
     }
 }
