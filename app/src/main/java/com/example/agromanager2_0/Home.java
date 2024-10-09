@@ -94,22 +94,25 @@ public class Home extends AppCompatActivity {
         });
 
         bottomSheetView.findViewById(R.id.cerrarSesion).setOnClickListener(v ->{
-            AlertDialog.Builder builder = new AlertDialog.Builder(null);
-            builder.setMessage(R.string.dialogoCancelar);
 
-            builder.setPositiveButton(R.string.salirConfirmar, new DialogInterface.OnClickListener() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+            builder.setMessage(R.string.preguntaUsuario);
+
+            builder.setPositiveButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
                 }
             });
 
-            builder.setNegativeButton(R.string.dialogoCancelar, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(R.string.salirConfirmar, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
                 }
             });
+
+            builder.show();
         });
 
 

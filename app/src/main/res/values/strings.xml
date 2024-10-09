@@ -2,6 +2,7 @@
     <string name="app_name">AgroManager2_0</string>
     <string name="add" />
     <string name="add_item">Add new item</string>
-    <string name="dialogoCancelar"> Log Out </string>
+    <string name="preguntaUsuario"> Esta seguro que desea salir de AgroManager?</string>
+    <string name="Cancelar"> Cancelar </string>
     <string name="salirConfirmar"> Salir </string>
 </resources>
