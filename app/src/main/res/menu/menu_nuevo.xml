@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_nuevo_lote"
+        android:title="Nuevo Lote"
+        android:enabled="true"
+        android:icon="@drawable/lotes"/>
+    <item
+        android:id="@+id/menu_nueva_labor"
+        android:title="Nueva Labor"
+        android:enabled="false"
+        android:icon="@drawable/labores"/>
+    <item
+        android:id="@+id/menu_nuevo_cultivo"
+        android:title="Nuevo Cultivo"
+        android:enabled="false"
+        android:icon="@drawable/cultivos"/>
+    <item
+        android:id="@+id/menu_nueva_aplicacion"
+        android:title="Nueva Aplicación"
+        android:enabled="false"
+        android:icon="@drawable/aplicaciones"/>
+</menu>
