@@ -34,9 +34,6 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_lote);
 
-
-
-
         // Inicializar el fragmento del mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
@@ -87,6 +84,7 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {

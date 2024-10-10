@@ -121,7 +121,7 @@ public class LaboresActivity extends AppCompatActivity {
                         laborAdapter.notifyDataSetChanged();
 
                         // Limpiar los campos después de guardar
-                        limpiarCampos();
+                        limpiarLotes();
 
                         Toast.makeText(this, "Labor guardada exitosamente", Toast.LENGTH_SHORT).show();
                     } else {
@@ -163,7 +163,7 @@ public class LaboresActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
-    private void limpiarCampos() {
+    private void limpiarLotes() {
         nombreLaborEditText.setText("");
         descripcionLaborEditText.setText("");
         spinnerLotes.setSelection(0);
