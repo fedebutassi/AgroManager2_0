@@ -47,6 +47,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
+    <!-- Texto instructivo y Spinner de Lotes -->
+    <TextView
+        android:id="@+id/textoSeleccionLote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecciona un lote para esta labor"
+        android:textSize="14sp"
+        android:textColor="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSeleccionarFecha"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+
+
     <!-- Spinner de Lotes -->
     <Spinner
         android:id="@+id/spinnerLotes"
