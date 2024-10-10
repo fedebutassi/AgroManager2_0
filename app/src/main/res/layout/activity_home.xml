@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="@+id/view"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/cultivos"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/imageButton2"
@@ -42,6 +42,7 @@
         android:layout_height="59dp"
         android:layout_marginStart="8dp"
         android:background="#4CAF50"
+        android:contentDescription="Nada"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/view"
@@ -49,7 +50,7 @@
         app:layout_constraintStart_toEndOf="@+id/imageButton4"
         app:layout_constraintTop_toTopOf="@+id/view"
         app:srcCompat="@drawable/labores"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="HardcodedText,SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/imageButton3"
@@ -65,7 +66,7 @@
         app:layout_constraintTop_toTopOf="@+id/view"
         app:layout_constraintVertical_bias="0.625"
         app:srcCompat="@drawable/aplicaciones"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
 
     <ImageButton
@@ -84,45 +85,73 @@
         app:layout_constraintTop_toTopOf="@+id/view"
         app:layout_constraintVertical_bias="0.625"
         app:srcCompat="@drawable/lotes"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
-    <FrameLayout
-        android:id="@+id/view2"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="61dp"
         android:background="#4CAF50"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="-3dp" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-        <Button
-            android:id="@+id/menuSuperior"
-            android:layout_width="56dp"
-            android:layout_height="58dp"
-            android:layout_marginTop="2dp"
-            android:src="@drawable/menuiconoredondo"
+        <!-- Texto "AgroManager" en el borde izquierdo -->
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="AgroManager"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText"/>
+
+        <!-- Botón de avatar al lado del botón del menú -->
+        <ImageButton
+            android:id="@+id/avatar_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Avatar"
             android:scaleType="fitCenter"
-            app:cornerRadius="30dp"
-            android:layout_gravity="end"/>
+            android:src="@drawable/ic_avatar"
+            tools:ignore="HardcodedText,ImageContrastCheck,TouchTargetSizeCheck" />
 
-    </FrameLayout>
+        <!-- Botón de menú desplegable (tres líneas) -->
+        <ImageButton
+            android:id="@+id/menu_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Menu"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_menu"
+            tools:ignore="HardcodedText,TouchTargetSizeCheck" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/signomas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/botonmas"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        app:layout_constraintTop_toBottomOf="@+id/view2"
         app:layout_constraintVertical_bias="0.973"
-        android:scaleType="fitCenter"
-        android:src="@drawable/botonmas"
-        android:contentDescription="@string/add_item"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="ContentDescription,HardcodedText,MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

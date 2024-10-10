@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Categoría de ajustes generales -->
+    <androidx.preference.PreferenceCategory
+        android:title="Configuracion General">
+
+        <!-- Opción de Switch para activar/desactivar algo -->
+        <androidx.preference.SwitchPreferenceCompat
+            android:key="notifications"
+            android:title="Activar Notifiaciones"
+            android:summary="Reciba notificaciones desde la App"
+            android:defaultValue="true" />
+
+        <androidx.preference.Preference
+            android:key="change password"
+            android:title="Cambiar contraseña"
+            android:defaultValue="true"
+            />
+    </androidx.preference.PreferenceCategory>
+
+    <!-- Categoría de ajustes avanzados -->
+    <androidx.preference.PreferenceCategory android:title="Configuaracion Avanzada">
+
+
+
+        <!-- Opción para borrar datos o resetear la app -->
+        <androidx.preference.Preference
+            android:key="clear_data"
+            android:title="Borrar Informacion"
+            android:summary="Borrar toda la informacion de la aplicacion." />
+
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

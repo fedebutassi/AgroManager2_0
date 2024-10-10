@@ -23,7 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.agromanager2_0.labores.LaboresActivity;
 import com.example.agromanager2_0.lotes.NuevoLoteActivity;
+import com.example.agromanager2_0.settings.SettingsActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Home extends AppCompatActivity {
 
@@ -48,7 +50,7 @@ public class Home extends AppCompatActivity {
         ImageButton imageButton5 = findViewById(R.id.signomas);
         imageButton5.setOnClickListener(v -> showBottomSheetDialog(v));
 
-        Button buttonMenuSuperior = findViewById(R.id.menuSuperior);
+        ImageButton buttonMenuSuperior = findViewById(R.id.menu_button);
         buttonMenuSuperior.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view2){
@@ -56,9 +58,22 @@ public class Home extends AppCompatActivity {
             }
         });
 
+        ImageButton avatarMiPerfil = findViewById(R.id.avatar_button);
+        avatarMiPerfil.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view3){
+                irAMiPerfil();
+            }
+        });
 
+        FloatingActionButton fab = findViewById(R.id.signomas);
+        fab.setImageResource(R.drawable.botonmas);
     }
 
+    public void irAMiPerfil(){
+        Intent intent = new Intent(this, MiPerfil.class);
+        startActivity(intent);
+    }
 
     private void showBottomSheetDialog(View view) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
@@ -166,7 +181,12 @@ public class Home extends AppCompatActivity {
         bottomSheetDialog.setContentView(bottomSheetView);
 
         bottomSheetView.findViewById(R.id.configuracion).setOnClickListener(v ->{
-            openMenuSuperior("Configuracion");
+            // Crear un intent para abrir la actividad de configuración
+            Intent intent = new Intent(v.getContext(), SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            v.getContext().startActivity(intent);
+
+            // Cerrar el BottomSheet
             bottomSheetDialog.dismiss();
         });
 
