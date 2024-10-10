@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- res/layout/bottom_sheet_menu.xml -->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/nuevoLote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nuevo Lote"
+            android:padding="16dp"/>
+
+        <TextView
+            android:id="@+id/nuevaLabor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nueva Labor"
+            android:padding="16dp"/>
+
+        <TextView
+            android:id="@+id/nuevaAplicacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nueva Aplicación"
+            android:padding="16dp"/>
+
+        <TextView
+            android:id="@+id/nuevoCultivo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nuevo Cultivo"
+            android:padding="16dp"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="60dp"
         android:background="#4CAF50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,19 +86,43 @@
         app:srcCompat="@drawable/lotes"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <ImageButton
-        android:id="@+id/imageButton5"
-        android:layout_width="56dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="#2196F3"
-        android:scaleType="fitCenter"
+    <FrameLayout
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:background="#4CAF50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="-3dp" >
+
+        <Button
+            android:id="@+id/menuSuperior"
+            android:layout_width="56dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/menuiconoredondo"
+            android:scaleType="fitCenter"
+            app:cornerRadius="30dp"
+            android:layout_gravity="end"/>
+
+    </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/signomas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        app:layout_constraintTop_toTopOf="@+id/view"
-        app:srcCompat="@drawable/agregar"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintVertical_bias="0.973"
+        android:scaleType="fitCenter"
+        android:src="@drawable/botonmas"
+        android:contentDescription="@string/add_item"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
