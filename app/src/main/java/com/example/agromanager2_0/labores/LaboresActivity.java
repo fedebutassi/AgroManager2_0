@@ -40,6 +40,8 @@ public class LaboresActivity extends AppCompatActivity {
         setContentView(R.layout.activity_labores);
 
 
+
+
         // Habilitar el botón atrás en la ActionBar
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
