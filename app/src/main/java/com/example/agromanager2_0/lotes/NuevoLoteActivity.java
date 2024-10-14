@@ -29,6 +29,8 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private LatLng selectedLocation;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
+import com.example.agromanager2_0.cultivos.CultivoActivity;
 import com.example.agromanager2_0.labores.LaboresActivity;
 import com.example.agromanager2_0.lotes.NuevoLoteActivity;
 import com.example.agromanager2_0.settings.SettingsActivity;
@@ -151,10 +152,10 @@ public class Home extends AppCompatActivity {
                 intent = new Intent(this, AplicacionActivity.class);
                 startActivity(intent);
                 break;
-//            case "Cultivos":
-//                intent = new Intent(this, CultivosActivity.class);
-//                startActivity(intent);
-//                break;
+            case "Cultivos":
+                intent = new Intent(this, CultivoActivity.class);
+                startActivity(intent);
+                break;
             default:
                 throw new IllegalArgumentException("Pantalla no reconocida: " + pantalla);
         }
