@@ -46,13 +46,13 @@ public class CultivoActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cultivo);
 
-        // Habilitar el botón atrás en la ActionBar
+
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Cultivos");
 
-        // Inicializar vistas
+
         editTextCultivo = findViewById(R.id.editTextCultivo);
         editTextDescripcionCultivo = findViewById(R.id.editTextDescripcionCultivo);
         spinnerLotes = findViewById(R.id.spinnerLotes);
