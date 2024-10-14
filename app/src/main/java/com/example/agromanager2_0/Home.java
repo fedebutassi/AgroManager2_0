@@ -2,6 +2,7 @@ package com.example.agromanager2_0;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ActionProvider;
@@ -12,6 +13,7 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
 import com.example.agromanager2_0.labores.LaboresActivity;
 import com.example.agromanager2_0.lotes.NuevoLoteActivity;
 import com.example.agromanager2_0.settings.SettingsActivity;
@@ -68,6 +71,8 @@ public class Home extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setImageResource(R.drawable.botonmas);
+
+
     }
 
     public void irAMiPerfil(){
@@ -142,10 +147,10 @@ public class Home extends AppCompatActivity {
                 intent = new Intent(this, LaboresActivity.class);
                 startActivity(intent);
                 break;
-//            case "Aplicaciones": // Agregar este caso
-//                intent = new Intent(this, AplicacionesActivity.class);
-//                startActivity(intent);
-//                break;
+            case "Aplicaciones": // Agregar este caso
+                intent = new Intent(this, AplicacionActivity.class);
+                startActivity(intent);
+                break;
 //            case "Cultivos":
 //                intent = new Intent(this, CultivosActivity.class);
 //                startActivity(intent);
@@ -210,7 +215,7 @@ public class Home extends AppCompatActivity {
             builder.setNegativeButton(R.string.salirConfirmar, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
+                    cerrarSesionYSalir();
                 }
             });
 
@@ -219,6 +224,20 @@ public class Home extends AppCompatActivity {
 
 
         bottomSheetDialog.show();
+    }
+
+    private void cerrarSesionYSalir() {
+        // Eliminar los datos de sesión (por ejemplo, en SharedPreferences)
+        SharedPreferences sharedPreferences = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();  // Limpiar todos los datos de sesión
+        editor.apply();
+
+        // Mostrar un mensaje que la sesión se ha cerrado
+        Toast.makeText(Home.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+
+        // Finalizar todas las actividades y salir de la aplicación
+        finishAffinity();  // Cierra todas las actividades y sale de la app
     }
 
     private void openMenuSuperior(String tipo) {

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Nombre de la labor -->
+        <TextView
+            android:id="@+id/textViewNombreAplicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Lote/Aplicacion"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#333333" />
+
+        <!-- Fecha de la labor -->
+        <TextView
+            android:id="@+id/textViewFechaAplicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha: DD/MM/AAAA"
+            android:textSize="14sp"
+            android:textColor="#555555"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Lote asociado a la labor -->
+        <TextView
+            android:id="@+id/textViewLoteAsociado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lote: Nombre del Lote"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textViewAreaCubierta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Area cubierta (has): "
+            android:textSize="18sp"
+            android:textColor="#333333" />
+
+
+        <!-- Descripción de la aplicacion -->
+        <TextView
+            android:id="@+id/textViewDescripcionAplicacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textSize="14sp"
+            android:textColor="#777777"
+            android:layout_marginTop="4dp"/>
+
+
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
