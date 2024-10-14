@@ -16,12 +16,13 @@
         android:id="@+id/editTextNombreLabor"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="Nombre de la labor"
         android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/custom_toolbar"
-        app:layout_constraintStart_toStartOf="parent"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/custom_toolbar" />
 
     <!-- Descripción de la Labor -->
     <EditText
@@ -41,11 +42,12 @@
         android:id="@+id/buttonSeleccionarFecha"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#4CAF50"
         android:text="Seleccionar Fecha"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDescripcionLabor"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDescripcionLabor" />
 
     <!-- Texto instructivo y Spinner de Lotes -->
     <TextView
@@ -67,21 +69,23 @@
         android:id="@+id/spinnerLotes"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSeleccionarFecha"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="30dp"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSeleccionarFecha" />
 
     <!-- Botón Guardar -->
     <Button
         android:id="@+id/buttonGuardarLabor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#4CAF50"
         android:text="Guardar Labor"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerLotes"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerLotes" />
 
     <!-- RecyclerView para mostrar las labores guardadas -->
     <androidx.recyclerview.widget.RecyclerView

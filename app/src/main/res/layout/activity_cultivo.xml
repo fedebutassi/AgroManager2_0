@@ -59,11 +59,12 @@
         android:id="@+id/buttonSeleccionarFechaCultivo"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#4CAF50"
         android:text="Seleccionar Fecha"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDescripcionCultivo"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDescripcionCultivo" />
 
     <!-- Texto instructivo y Spinner de Lotes -->
     <TextView
@@ -96,11 +97,12 @@
         android:id="@+id/buttonGuardarCultivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#4CAF50"
         android:text="Guardar Cultivo"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerLotes"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerLotes" />
 
     <!-- RecyclerView para mostrar las labores guardadas -->
     <androidx.recyclerview.widget.RecyclerView
