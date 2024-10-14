@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.ActionProvider;
 import android.view.ContextMenu;
@@ -28,6 +29,7 @@ import com.example.agromanager2_0.cultivos.CultivoActivity;
 import com.example.agromanager2_0.labores.LaboresActivity;
 import com.example.agromanager2_0.lotes.NuevoLoteActivity;
 import com.example.agromanager2_0.settings.SettingsActivity;
+import com.example.agromanager2_0.settings.listadoLotes;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -73,7 +75,18 @@ public class Home extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setImageResource(R.drawable.botonmas);
 
+        ImageButton imageButton4 = findViewById(R.id.imageButton4);
+        imageButton4.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view4){
+                irAMisLotes();
+            }
+        });
+    }
 
+    private void irAMisLotes() {
+        Intent intent = new Intent(this, listadoLotes.class);
+        startActivity(intent);
     }
 
     public void irAMiPerfil(){

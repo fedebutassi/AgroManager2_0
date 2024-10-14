@@ -17,21 +17,23 @@
         android:id="@+id/editTextNombreLote"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="Nombre del lote"
-        app:layout_constraintStart_toStartOf="parent"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/custom_toolbar"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/custom_toolbar" />
 
     <EditText
         android:id="@+id/editTextSuperficie"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:hint="Superficie en hectáreas"
-        app:layout_constraintStart_toStartOf="parent"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNombreLote"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNombreLote" />
 
     <TextView
         android:id="@+id/textViewInstruccionMapa"
