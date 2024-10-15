@@ -58,6 +58,7 @@ public class Registro extends AppCompatActivity {
                 Toast.makeText(Registro.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
                 return;
             }
+
         });
 
         cancelarRegistro.setOnClickListener(v -> {
