@@ -88,6 +88,8 @@ public class Home extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+
     private void showBottomSheetDialog(View view) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
@@ -204,7 +206,8 @@ public class Home extends AppCompatActivity {
         });
 
         bottomSheetView.findViewById(R.id.editarPerfil).setOnClickListener(v ->{
-            openMenuSuperior("Editar Perfil");
+            Intent intent = new Intent(Home.this, EditarPerfil.class);
+            startActivity(intent);
             bottomSheetDialog.dismiss();
         });
 
