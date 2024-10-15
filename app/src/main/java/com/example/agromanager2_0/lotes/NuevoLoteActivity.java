@@ -13,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.agromanager2_0.R;
+import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,12 +31,53 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private LatLng selectedLocation;
 
+    private MyDataBaseHelper miDb;
+    private Button buttonGuardarLote;
+    private EditText editTextNombreLote;
+    private EditText editTextSuperficie;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_lote);
+
+        miDb = new MyDataBaseHelper(this);
+
+        buttonGuardarLote = findViewById(R.id.buttonGuardarLote); // ID debe coincidir
+        editTextNombreLote = findViewById(R.id.editTextNombreLote);
+        editTextSuperficie = findViewById(R.id.editTextSuperficie);
+
+        buttonGuardarLote.setOnClickListener(v -> {
+            String nombreLote = editTextNombreLote.getText().toString();
+            String superficieStr = editTextSuperficie.getText().toString();
+
+            if (!nombreLote.isEmpty() && !superficieStr.isEmpty() && selectedLocation != null) {
+                // Convertir la superficie a un entero
+                int superficie = Integer.parseInt(superficieStr);
+
+                // Obtener latitud y longitud de la ubicación seleccionada
+                double latitud = selectedLocation.latitude;
+                double longitud = selectedLocation.longitude;
+
+                // Insertar datos en la base de datos
+                boolean isInserted = miDb.insertarDatosLotes(nombreLote, superficie, (int) latitud, (int) longitud);
+
+                if (isInserted) {
+                    Toast.makeText(this, "Lote guardado exitosamente", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Error al guardar el lote", Toast.LENGTH_SHORT).show();
+                }
+
+                // Limpiar los campos después de guardar
+                editTextNombreLote.setText("");
+                editTextSuperficie.setText("");
+                mMap.clear();
+            } else {
+                Toast.makeText(this, "Por favor, complete todos los campos y seleccione una ubicación", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         // Inicializar el fragmento del mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

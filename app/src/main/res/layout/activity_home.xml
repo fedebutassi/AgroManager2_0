@@ -143,15 +143,14 @@
         android:id="@+id/signomas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:contentDescription="TODO"
-        android:src="@drawable/botonmas"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="36dp"
+        android:clickable="true"
+        android:contentDescription="@string/fab_description"
+        app:backgroundTint="#2196F3"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintHorizontal_bias="0.452"
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        app:layout_constraintVertical_bias="0.973"
-        tools:ignore="ContentDescription,HardcodedText,MissingConstraints" />
+        app:srcCompat="@drawable/add" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

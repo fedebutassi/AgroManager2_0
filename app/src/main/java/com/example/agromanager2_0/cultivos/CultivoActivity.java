@@ -15,12 +15,11 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agromanager2_0.R;
-
+import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.lotes.Lote;
 import com.example.agromanager2_0.lotes.LoteStorage;
 
@@ -30,14 +29,17 @@ import java.util.List;
 
 public class CultivoActivity extends AppCompatActivity {
 
-    private EditText editTextCultivo, editTextDescripcionCultivo;
-    private EditText editTextAreaCubiertaPorCultivo;
-    private Spinner spinnerLotes;
-    private Button fechaButton, guardarButton;
-    private RecyclerView recyclerViewCultivos;
-    private CultivoAdapter cultivoAdapter;
-    private List<Cultivo> listaCultivos;
-    private String fechaSeleccionada = "";
+    private EditText editTextCultivo, editTextDescripcionCultivo; // Sin cambios
+    private EditText editTextAreaCubiertaPorCultivo; // Sin cambios
+    private Spinner spinnerLotes; // Sin cambios
+    private Button fechaButton, guardarButton; // Sin cambios
+    private RecyclerView recyclerViewCultivos; // Sin cambios
+    private CultivoAdapter cultivoAdapter; // Sin cambios
+    private List<Cultivo> listaCultivos; // Sin cambios
+    private String fechaSeleccionada = ""; // Sin cambios
+
+    MyDataBaseHelper miDb;
+    // Button buttonSeleccionarFechaCultivo, buttonGuardarCultivo; // Eliminada: innecesaria, ya hay referencias a fechaButton y guardarButton
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -46,12 +48,12 @@ public class CultivoActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cultivo);
 
+        miDb = new MyDataBaseHelper(this);
 
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Cultivos");
-
 
         editTextCultivo = findViewById(R.id.editTextCultivo);
         editTextDescripcionCultivo = findViewById(R.id.editTextDescripcionCultivo);
@@ -61,6 +63,7 @@ public class CultivoActivity extends AppCompatActivity {
         guardarButton = findViewById(R.id.buttonGuardarCultivo);
 
         recyclerViewCultivos = findViewById(R.id.recyclerViewCultivos);
+        recyclerViewCultivos.setLayoutManager(new LinearLayoutManager(this)); // Inicialización movida al principio
 
         List<String> nombresLotes = new ArrayList<>();
         for (Lote lote : LoteStorage.getLotes()) {
@@ -68,42 +71,33 @@ public class CultivoActivity extends AppCompatActivity {
         }
 
         // Log para comprobar cuántos lotes se están cargando
-        Log.d("AplicacionActivity", "Lotes disponibles: " + nombresLotes.size());
+        Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size()); // Cambiado el nombre del log
 
-        // Adaptador para el Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLotes.setAdapter(adapter);
 
-        // Inicializar la lista de labores una sola vez
-        listaCultivos = CultivoStorage.getCultivos();
+        // Inicializar la lista de cultivos una sola vez
+        listaCultivos = CultivoStorage.getCultivos(); // Cambio para cargar cultivos desde el almacenamiento
 
-        // Inicializa el RecyclerView y el adaptador en onCreate o similar
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewCultivos);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Inicializa la lista de labores desde LaborStorage
-        listaCultivos = CultivoStorage.getCultivos();
-
-
-        // Configura el adaptador con la lista de labores
+        // Inicializa el RecyclerView y el adaptador
         cultivoAdapter = new CultivoAdapter(listaCultivos);
-        recyclerView.setAdapter(cultivoAdapter);
+        recyclerViewCultivos.setAdapter(cultivoAdapter);
 
-        fechaButton.setOnClickListener(v -> mostrarDatePicker());
+        fechaButton.setOnClickListener(view -> mostrarDatePicker()); // Método separado para el DatePicker
 
-        guardarButton.setOnClickListener(v -> {
-            String Cultivo = editTextCultivo.getText().toString();
+        guardarButton.setOnClickListener(view -> {
+            String nombreCultivo = editTextCultivo.getText().toString(); // Variable renombrada para claridad
             String descripcionCultivo = editTextDescripcionCultivo.getText().toString();
             int areaCubiertaPorCultivo = Integer.parseInt(editTextAreaCubiertaPorCultivo.getText().toString());
             if (spinnerLotes.getSelectedItem() != null) {
                 String loteSeleccionado = spinnerLotes.getSelectedItem().toString();
 
-                if (!Cultivo.isEmpty() && !fechaSeleccionada.isEmpty() && !loteSeleccionado.isEmpty()) {
+                if (!nombreCultivo.isEmpty() && !fechaSeleccionada.isEmpty() && !loteSeleccionado.isEmpty()) {
                     // Verificar si la labor ya existe para evitar duplicados
-                    boolean existeCultivo = false;
+                    boolean existeCultivo = false; // Nueva lógica para evitar duplicados
                     for (Cultivo cultivo : listaCultivos) {
-                        if (cultivo.getCultivo().equals(Cultivo) && cultivo.getFechaCultivo().equals(fechaSeleccionada)) {
+                        if (cultivo.getCultivo().equals(nombreCultivo) && cultivo.getFechaCultivo().equals(fechaSeleccionada)) {
                             existeCultivo = true;
                             break;
                         }
@@ -111,25 +105,32 @@ public class CultivoActivity extends AppCompatActivity {
 
                     if (!existeCultivo) {
                         // Crear nueva labor
-                        Cultivo nuevoCultivo = new Cultivo(Cultivo, fechaSeleccionada, loteSeleccionado, areaCubiertaPorCultivo,descripcionCultivo);
+                        Cultivo nuevoCultivo = new Cultivo(nombreCultivo, fechaSeleccionada, loteSeleccionado, areaCubiertaPorCultivo, descripcionCultivo);
 
-                        // Guardar la labor en LaborStorage
-                        CultivoStorage.addCultivo(nuevoCultivo);
+                        boolean insertadoExitosamente = miDb.insertarDatosCultivos(nombreCultivo, areaCubiertaPorCultivo, fechaSeleccionada, descripcionCultivo);
 
-                        // Agregar directamente a la lista temporal
-                        listaCultivos.add(nuevoCultivo);
 
-                        // Verificación mediante Log
-                        Log.d("CultivoActivity", "Cultivo guardado: " + nuevoCultivo.getCultivo());
-                        Log.d("CultivoActivity", "Cantidad de cultivos guardados: " + listaCultivos.size());
+                        if (insertadoExitosamente) {
+                            // Agregar a la lista temporal de CultivoStorage
+                            CultivoStorage.addCultivo(nuevoCultivo);
 
-                        // Notificar al adaptador que los datos han cambiado
-                        cultivoAdapter.notifyDataSetChanged();
+                            // Agregar directamente a la lista temporal
+                            listaCultivos.add(nuevoCultivo);
 
-                        // Limpiar los campos después de guardar
-                        limpiarLotes();
+                            // Verificación mediante Log
+                            Log.d("CultivoActivity", "Cultivo guardado: " + nuevoCultivo.getCultivo());
+                            Log.d("CultivoActivity", "Cantidad de cultivos guardados: " + listaCultivos.size());
 
-                        Toast.makeText(this, "Cultivo guardado exitosamente", Toast.LENGTH_SHORT).show();
+                            // Notificar al adaptador que los datos han cambiado
+                            cultivoAdapter.notifyDataSetChanged();
+
+                            // Limpiar los campos después de guardar
+                            limpiarLotes();
+
+                            Toast.makeText(this, "Cultivo guardado exitosamente en la base de datos", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Error al guardar el cultivo en la base de datos", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(this, "Este cultivo ya existe", Toast.LENGTH_SHORT).show();
                     }
@@ -145,7 +146,6 @@ public class CultivoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            // Cierra la actividad actual y vuelve a la anterior
             finish();
             return true;
         }
@@ -153,7 +153,7 @@ public class CultivoActivity extends AppCompatActivity {
     }
 
     // Mostrar un DatePicker para seleccionar la fecha
-    private void mostrarDatePicker() {
+    private void mostrarDatePicker() { // Nuevo método para mostrar el DatePicker
         final Calendar calendar = Calendar.getInstance();
         int dia = calendar.get(Calendar.DAY_OF_MONTH);
         int mes = calendar.get(Calendar.MONTH);
@@ -168,7 +168,7 @@ public class CultivoActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
-    private void limpiarLotes() {
+    private void limpiarLotes() { // Nuevo método para limpiar los campos
         editTextCultivo.setText("");
         editTextDescripcionCultivo.setText("");
         spinnerLotes.setSelection(0);
@@ -179,7 +179,6 @@ public class CultivoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
 }

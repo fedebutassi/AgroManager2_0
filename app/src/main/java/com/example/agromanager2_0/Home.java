@@ -70,15 +70,8 @@ public class Home extends AppCompatActivity {
         });
 
         FloatingActionButton fab = findViewById(R.id.signomas);
-        fab.setImageResource(R.drawable.botonmas);
+        fab.setContentDescription("Añadir nuevo elemento");
 
-//        ImageButton imageButton4 = findViewById(R.id.imageButton4);
-//        imageButton4.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view4){
-//                irAMisLotes();
-//            }
-//        });
     }
 
 

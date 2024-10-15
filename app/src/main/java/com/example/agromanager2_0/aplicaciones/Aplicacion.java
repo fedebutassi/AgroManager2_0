@@ -7,10 +7,10 @@ public class Aplicacion {
     private String nombreAplicacion;
     private String fechaAplicacion;
     private String lote;
-    private int areaCubierta;
+    private String areaCubierta;
     private String descripcionAplicacacion;
 
-    public Aplicacion(String nombreAplicacion, String fechaAplicacion, String lote,int areaCubierta, String descripcionAplicacacion) {
+    public Aplicacion(String nombreAplicacion, String fechaAplicacion, String lote, String areaCubierta, String descripcionAplicacacion) {
         this.nombreAplicacion = nombreAplicacion;
         this.fechaAplicacion = fechaAplicacion;
         this.lote = lote;
@@ -30,7 +30,7 @@ public class Aplicacion {
         return lote;
     }
 
-    public int getAreaCubierta(){
+    public String getAreaCubierta(){
         return areaCubierta;
     }
 

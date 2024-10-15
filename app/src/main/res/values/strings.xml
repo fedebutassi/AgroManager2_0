@@ -21,4 +21,5 @@
         <item>60</item>
         <item>240</item>
     </string-array>
+    <string name="fab_description">Añadir nuevo elemento</string>
 </resources>

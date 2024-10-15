@@ -21,6 +21,8 @@ import com.example.agromanager2_0.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.lotes.Lote;
 import com.example.agromanager2_0.lotes.LoteStorage;
 
@@ -33,14 +35,14 @@ public class LaboresActivity extends AppCompatActivity {
     private LaborAdapter laborAdapter;
     private List<Labor> listaLabores;
     private String fechaSeleccionada = "";
+    private MyDataBaseHelper miDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labores);
 
-
-
+        miDb = new MyDataBaseHelper(this);
 
         // Habilitar el botón atrás en la ActionBar
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
@@ -108,24 +110,26 @@ public class LaboresActivity extends AppCompatActivity {
                     if (!existeLabor) {
                         // Crear nueva labor
                         Labor nuevaLabor = new Labor(nombreLabor, fechaSeleccionada, loteSeleccionado, descripcion);
+                        boolean insertadoExitosamente = miDb.insertarDatosLabores(nombreLabor, descripcion, fechaSeleccionada);
 
-                        // Guardar la labor en LaborStorage
-                        LaborStorage.addLabor(nuevaLabor);
+                        if (insertadoExitosamente) {
+                            // Agregar directamente a la lista temporal
+                            listaLabores.add(nuevaLabor);
 
-                        // Agregar directamente a la lista temporal
-                        listaLabores.add(nuevaLabor);
+                            // Verificación mediante Log
+                            Log.d("LaboresActivity", "Labor guardada: " + nuevaLabor.getNombre());
+                            Log.d("LaboresActivity", "Cantidad de labores guardadas: " + listaLabores.size());
 
-                        // Verificación mediante Log
-                        Log.d("LaboresActivity", "Labor guardada: " + nuevaLabor.getNombre());
-                        Log.d("LaboresActivity", "Cantidad de labores guardadas: " + listaLabores.size());
+                            // Notificar al adaptador que los datos han cambiado
+                            laborAdapter.notifyDataSetChanged();
 
-                        // Notificar al adaptador que los datos han cambiado
-                        laborAdapter.notifyDataSetChanged();
+                            // Limpiar los campos después de guardar
+                            limpiarLotes();
 
-                        // Limpiar los campos después de guardar
-                        limpiarLotes();
-
-                        Toast.makeText(this, "Labor guardada exitosamente", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Labor guardada exitosamente en la base de datos", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Error al guardar la labor en la base de datos", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(this, "Esta labor ya existe", Toast.LENGTH_SHORT).show();
                     }
