@@ -87,17 +87,17 @@ public class CultivoActivity extends AppCompatActivity {
         fechaButton.setOnClickListener(view -> mostrarDatePicker()); // Método separado para el DatePicker
 
         guardarButton.setOnClickListener(view -> {
-            String Cultivo = editTextCultivo.getText().toString();
+            String nombreCultivo = editTextCultivo.getText().toString(); // Variable renombrada para claridad
             String descripcionCultivo = editTextDescripcionCultivo.getText().toString();
             int areaCubiertaPorCultivo = Integer.parseInt(editTextAreaCubiertaPorCultivo.getText().toString());
             if (spinnerLotes.getSelectedItem() != null) {
                 String loteSeleccionado = spinnerLotes.getSelectedItem().toString();
 
-                if (!Cultivo.isEmpty() && !fechaSeleccionada.isEmpty() && !loteSeleccionado.isEmpty()) {
+                if (!nombreCultivo.isEmpty() && !fechaSeleccionada.isEmpty() && !loteSeleccionado.isEmpty()) {
                     // Verificar si la labor ya existe para evitar duplicados
                     boolean existeCultivo = false; // Nueva lógica para evitar duplicados
                     for (Cultivo cultivo : listaCultivos) {
-                        if (cultivo.getCultivo().equals(Cultivo) && cultivo.getFechaCultivo().equals(fechaSeleccionada)) {
+                        if (cultivo.getCultivo().equals(nombreCultivo) && cultivo.getFechaCultivo().equals(fechaSeleccionada)) {
                             existeCultivo = true;
                             break;
                         }
@@ -105,27 +105,34 @@ public class CultivoActivity extends AppCompatActivity {
 
                     if (!existeCultivo) {
                         // Crear nueva labor
-                        Cultivo nuevoCultivo = new Cultivo(Cultivo, fechaSeleccionada, loteSeleccionado, areaCubiertaPorCultivo, descripcionCultivo);
+                        Cultivo nuevoCultivo = new Cultivo(nombreCultivo, fechaSeleccionada, loteSeleccionado, areaCubiertaPorCultivo, descripcionCultivo);
 
-                        // Guardar la labor en LaborStorage
-                        CultivoStorage.addCultivo(nuevoCultivo);
+                        boolean insertadoExitosamente = miDb.insertarDatosCultivos(nombreCultivo, areaCubiertaPorCultivo, fechaSeleccionada, descripcionCultivo);
 
-                        // Agregar directamente a la lista temporal
-                        listaCultivos.add(nuevoCultivo);
 
-                        // Verificación mediante Log
-                        Log.d("CultivoActivity", "Cultivo guardado: " + nuevoCultivo.getCultivo());
-                        Log.d("CultivoActivity", "Cantidad de cultivos guardados: " + listaCultivos.size());
+                        if (insertadoExitosamente) {
+                            // Agregar a la lista temporal de CultivoStorage
+                            CultivoStorage.addCultivo(nuevoCultivo);
 
-                        // Notificar al adaptador que los datos han cambiado
-                        cultivoAdapter.notifyDataSetChanged();
+                            // Agregar directamente a la lista temporal
+                            listaCultivos.add(nuevoCultivo);
 
-                        // Limpiar los campos después de guardar
-                        limpiarLotes(); // Método para limpiar campos
+                            // Verificación mediante Log
+                            Log.d("CultivoActivity", "Cultivo guardado: " + nuevoCultivo.getCultivo());
+                            Log.d("CultivoActivity", "Cantidad de cultivos guardados: " + listaCultivos.size());
 
-                        Toast.makeText(this, "Cultivo guardado exitosamente", Toast.LENGTH_SHORT).show();
+                            // Notificar al adaptador que los datos han cambiado
+                            cultivoAdapter.notifyDataSetChanged();
+
+                            // Limpiar los campos después de guardar
+                            limpiarLotes();
+
+                            Toast.makeText(this, "Cultivo guardado exitosamente en la base de datos", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Error al guardar el cultivo en la base de datos", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(this, "Este cultivo ya existe", Toast.LENGTH_SHORT).show(); // Mensaje de duplicado
+                        Toast.makeText(this, "Este cultivo ya existe", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();

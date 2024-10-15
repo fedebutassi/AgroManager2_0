@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 public class MyDataBaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NOMBRE = "agromanager.db";
 
     private static final String TABLE_USUARIOS = "Usuarios";
@@ -63,7 +63,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
                 + "id_labor INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "nombre_labor TEXT NOT NULL, "
                 + "descripcion_labor TEXT, "
-                + "fecha_realizacion DATE, "
+                + "fecha_labor DATE, "
                 + "id_campo INTEGER, "
                 + "FOREIGN KEY (id_campo) REFERENCES " + TABLE_CAMPOS + "(id_campo)"
                 + ");";
@@ -71,7 +71,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 
         String CREATE_TABLE_PRODUCTOS_APLICADOS = "CREATE TABLE " + TABLE_PRODUCTOS_APLICADOS + " ("
                 + "id_aplicacion INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "producto TEXT NOT NULL, "
+                + "nombre_producto TEXT NOT NULL, "
                 + "cantidad_aplicada REAL, "
                 + "fecha_aplicacion DATE, "
                 + "id_campo INTEGER, "
@@ -126,6 +126,32 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         contentValues.put("descripcion_cultivo", descripcion_cultivo);
 
         long result = db.insert(TABLE_CULTIVOS, null, contentValues);
+        return result != -1;
+    }
+
+    public boolean insertarDatosLabores(String nombre_labor, String descripcion_labor,String fecha_labor){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("nombre_labor", nombre_labor);
+        contentValues.put("descripcion_labor", descripcion_labor);
+        contentValues.put("fecha_labor", fecha_labor);
+
+        long result = db.insert(TABLE_LABORES, null, contentValues);
+        return result != -1;
+    }
+
+    public boolean insertarDatosAplicaciones(String nombre_producto, String cantidad_aplicada, String fecha_aplicacion, String zona_cubierta_hectareas, String descripcion_aplicacion){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("nombre_producto", nombre_producto);
+        contentValues.put("cantidad_aplicada", cantidad_aplicada);
+        contentValues.put("fecha_aplicacion", fecha_aplicacion);
+        contentValues.put("zona_cubierta_hectareas", zona_cubierta_hectareas);
+        contentValues.put("descripcion_aplicacion", descripcion_aplicacion);
+
+        long result = db.insert(TABLE_PRODUCTOS_APLICADOS, null, contentValues);
         return result != -1;
     }
 }

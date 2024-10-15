@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agromanager2_0.R;
+import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.labores.Labor;
 import com.example.agromanager2_0.labores.LaborAdapter;
 import com.example.agromanager2_0.labores.LaborStorage;
@@ -40,12 +41,16 @@ public class AplicacionActivity extends AppCompatActivity {
     private AplicacionAdapter aplicacionAdapter;
     private List<Aplicacion> listaAplicaciones;
     private String fechaSeleccionada = "";
+    private MyDataBaseHelper miDb;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        miDb = new MyDataBaseHelper(this);
+
         setContentView(R.layout.activity_aplicacion2);
 
         // Habilitar el botón atrás en la ActionBar
@@ -97,7 +102,7 @@ public class AplicacionActivity extends AppCompatActivity {
         guardarButton.setOnClickListener(v -> {
             String nombreAplicacion = editTextNombreAplicacion.getText().toString();
             String descripcionAplicacion = editTextDescripcionAplicacion.getText().toString();
-            int areaCubierta = Integer.parseInt(editTextAreaCubierta.getText().toString());
+            String areaCubierta = editTextAreaCubierta.getText().toString();
             if (spinnerLotes.getSelectedItem() != null) {
                 String loteSeleccionado = spinnerLotes.getSelectedItem().toString();
 
@@ -115,25 +120,33 @@ public class AplicacionActivity extends AppCompatActivity {
                         // Crear nueva labor
                         Aplicacion nuevaAplicacion = new Aplicacion(nombreAplicacion, fechaSeleccionada, loteSeleccionado, areaCubierta,descripcionAplicacion);
 
-                        // Guardar la labor en LaborStorage
-                        AplicacionStorage.addAplicacion(nuevaAplicacion);
+                        boolean isInserted = miDb.insertarDatosAplicaciones(
+                                nombreAplicacion,                // nombre_producto
+                                areaCubierta,                    // cantidad_aplicada (el área cubierta puede representar la cantidad aplicada)
+                                fechaSeleccionada,               // fecha_aplicacion
+                                areaCubierta,                    // zona_cubierta_hectareas
+                                descripcionAplicacion            // descripcion_aplicacion
+                        );
+                        if (isInserted) {
+                            // Agregar directamente a la lista temporal
+                            listaAplicaciones.add(nuevaAplicacion);
 
-                        // Agregar directamente a la lista temporal
-                        listaAplicaciones.add(nuevaAplicacion);
+                            // Verificación mediante Log
+                            Log.d("AplicacionActivity", "Aplicacion guardada: " + nuevaAplicacion.getNombreAplicacion());
+                            Log.d("AplicacionActivity", "Cantidad de aplicaciones guardadas: " + listaAplicaciones.size());
 
-                        // Verificación mediante Log
-                        Log.d("AplicacionActivity", "Aplicacion guardada: " + nuevaAplicacion.getNombreAplicacion());
-                        Log.d("AplicacionActivity", "Cantidad de aplicaciones guardadas: " + listaAplicaciones.size());
+                            // Notificar al adaptador que los datos han cambiado
+                            aplicacionAdapter.notifyDataSetChanged();
 
-                        // Notificar al adaptador que los datos han cambiado
-                        aplicacionAdapter.notifyDataSetChanged();
+                            // Limpiar los campos después de guardar
+                            limpiarLotes();
 
-                        // Limpiar los campos después de guardar
-                        limpiarLotes();
-
-                        Toast.makeText(this, "Aplicacion guardada exitosamente", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Aplicacion guardada exitosamente", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Error al guardar la aplicación", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(this, "Esta aplicacion ya existe", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Esta aplicación ya existe", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
