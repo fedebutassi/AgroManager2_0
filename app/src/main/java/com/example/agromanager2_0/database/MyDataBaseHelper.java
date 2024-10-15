@@ -116,7 +116,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean insertarDatosCultivos(String nombre_cultivo, int area_cubierta,String fecha_cultivo, String descripcion_cultivo){
+    public boolean insertarDatosCultivos(String nombre_cultivo, String area_cubierta, String fecha_cultivo, String descripcion_cultivo){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 

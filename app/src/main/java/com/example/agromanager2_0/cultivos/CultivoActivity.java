@@ -89,7 +89,7 @@ public class CultivoActivity extends AppCompatActivity {
         guardarButton.setOnClickListener(view -> {
             String nombreCultivo = editTextCultivo.getText().toString(); // Variable renombrada para claridad
             String descripcionCultivo = editTextDescripcionCultivo.getText().toString();
-            int areaCubiertaPorCultivo = Integer.parseInt(editTextAreaCubiertaPorCultivo.getText().toString());
+            String areaCubiertaPorCultivo = editTextAreaCubiertaPorCultivo.getText().toString();
             if (spinnerLotes.getSelectedItem() != null) {
                 String loteSeleccionado = spinnerLotes.getSelectedItem().toString();
 
@@ -172,6 +172,7 @@ public class CultivoActivity extends AppCompatActivity {
         editTextCultivo.setText("");
         editTextDescripcionCultivo.setText("");
         spinnerLotes.setSelection(0);
+        editTextAreaCubiertaPorCultivo.setText("");
         fechaButton.setText("Seleccionar Fecha");
         fechaSeleccionada = "";
     }

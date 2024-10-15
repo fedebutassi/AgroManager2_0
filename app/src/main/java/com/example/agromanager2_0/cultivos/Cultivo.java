@@ -5,10 +5,10 @@ public class Cultivo {
     private String Cultivo;
     private String fechaCultivo;
     private String lote;
-    private int areaCubiertaPorCultivo;
+    private String areaCubiertaPorCultivo;
     private String descripcionCultivo;
 
-    public Cultivo(String Cultivo, String fechaAplicacionCultivo, String lote, int areaCubiertaPorCultivo, String descripcionCultivo) {
+    public Cultivo(String Cultivo, String fechaAplicacionCultivo, String lote, String areaCubiertaPorCultivo, String descripcionCultivo) {
         this.Cultivo = Cultivo;
         this.fechaCultivo = fechaAplicacionCultivo;
         this.lote = lote;
@@ -28,7 +28,7 @@ public class Cultivo {
         return lote;
     }
 
-    public int getAreaCubiertaPorCultivo() {
+    public String getAreaCubiertaPorCultivo() {
         return areaCubiertaPorCultivo;
     }
 

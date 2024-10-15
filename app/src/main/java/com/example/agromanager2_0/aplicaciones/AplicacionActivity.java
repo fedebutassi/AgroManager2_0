@@ -139,7 +139,7 @@ public class AplicacionActivity extends AppCompatActivity {
                             aplicacionAdapter.notifyDataSetChanged();
 
                             // Limpiar los campos después de guardar
-                            limpiarLotes();
+                            limpiarAplicacion();
 
                             Toast.makeText(this, "Aplicacion guardada exitosamente", Toast.LENGTH_SHORT).show();
                         } else {
@@ -183,12 +183,13 @@ public class AplicacionActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
-    private void limpiarLotes() {
+    private void limpiarAplicacion() {
         editTextNombreAplicacion.setText("");
         editTextDescripcionAplicacion.setText("");
         spinnerLotes.setSelection(0);
         fechaButton.setText("Seleccionar Fecha");
         fechaSeleccionada = "";
+        editTextAreaCubierta.setText("");
     }
 
     @Override

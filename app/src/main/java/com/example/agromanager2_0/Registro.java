@@ -48,7 +48,7 @@ public class Registro extends AppCompatActivity {
             String passwordStr = passwordField.getText().toString();
 
             boolean isInserted = miDb.insertarDatosUsuario(nombreStr,apellidoStr,fechaNacimientoStr,localidadStr,emailStr,passwordStr);
-
+            limpiarFormRegistro();
             if (isInserted)
                 Toast.makeText(Registro.this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show();
             else
@@ -61,8 +61,10 @@ public class Registro extends AppCompatActivity {
         });
 
         cancelarRegistro.setOnClickListener(v -> {
+            limpiarFormRegistro();
             finish();
         });
+
 
 
 
@@ -71,5 +73,15 @@ public class Registro extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    // Limpiar los campos del formulario
+    private void limpiarFormRegistro() {
+        nombre.setText("");
+        apellido.setText("");
+        bornDate.setText("");
+        localidad.setText("");
+        ingresoEmail.setText("");
+        passwordField.setText("");
     }
 }
