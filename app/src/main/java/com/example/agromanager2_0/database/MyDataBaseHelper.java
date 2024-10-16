@@ -2,6 +2,7 @@ package com.example.agromanager2_0.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -105,7 +106,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         return result != -1; // Retorna true si la inserción fue exitosa
     }
 
-    public boolean insertarDatosLotes(String nombre_campo, int hectareas, int latitud, int longitud){
+    public boolean insertarDatosLotes(String nombre_campo, int hectareas, double latitud, double longitud){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("nombre_campo",nombre_campo);
@@ -153,5 +154,15 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
 
         long result = db.insert(TABLE_PRODUCTOS_APLICADOS, null, contentValues);
         return result != -1;
+    }
+
+    public boolean validarUsuario(String email, String password){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM Usuarios WHERE email = ? AND password = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email, password});
+
+        boolean existe = cursor.getCount() > 0;
+        cursor.close();
+        return existe;
     }
 }

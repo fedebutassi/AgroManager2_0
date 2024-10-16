@@ -61,7 +61,7 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
                 double longitud = selectedLocation.longitude;
 
                 // Insertar datos en la base de datos
-                boolean isInserted = miDb.insertarDatosLotes(nombreLote, superficie, (int) latitud, (int) longitud);
+                boolean isInserted = miDb.insertarDatosLotes(nombreLote, superficie, latitud, longitud);
 
                 if (isInserted) {
                     Toast.makeText(this, "Lote guardado exitosamente", Toast.LENGTH_SHORT).show();
