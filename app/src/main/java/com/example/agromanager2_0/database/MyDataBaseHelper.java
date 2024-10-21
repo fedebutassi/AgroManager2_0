@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 public class MyDataBaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION =7;
     private static final String DATABASE_NOMBRE = "agromanager.db";
 
     private static final String TABLE_USUARIOS = "Usuarios";
@@ -41,8 +41,8 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
                 + "id_campo INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "nombre_campo TEXT NOT NULL, "
                 + "hectareas REAL, "
-                + "latitud REAL, "   // Columna para la latitud
-                + "longitud REAL, "  // Columna para la longitud
+                + "latitud DECIMAL(10,8),"
+                + "longitud DECIMAL(10,8),"
                 + "id_usuario INTEGER, "
                 + "FOREIGN KEY (id_usuario) REFERENCES " + TABLE_USUARIOS + "(id_usuario)"
                 + ");";
@@ -96,6 +96,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
     public boolean insertarDatosUsuario(String nombre, String apellido, String fechaNacimiento, String localidad, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
         contentValues.put("nombre", nombre);
         contentValues.put("apellido", apellido);
         contentValues.put("fecha_nacimiento", fechaNacimiento);
@@ -106,12 +107,12 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         return result != -1; // Retorna true si la inserción fue exitosa
     }
 
-    public boolean insertarDatosLotes(String nombre_campo, int hectareas, double latitud, double longitud){
+    public boolean insertarDatosLotes(String nombre_campo, double hectareas, double latitud, double longitud){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("nombre_campo",nombre_campo);
         contentValues.put("hectareas",hectareas);
-        contentValues.put("latitud",latitud);
+        contentValues.put("latitud", latitud);
         contentValues.put("longitud", longitud);
         long result = db.insert(TABLE_CAMPOS, null, contentValues);
         return result != -1;
@@ -165,4 +166,16 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return existe;
     }
+
+    public Cursor obtenerDatosUsuario(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT nombre, apellido, fecha_nacimiento, localidad, email FROM " + TABLE_USUARIOS + " WHERE email = ?";
+        return db.rawQuery(query, new String[]{email});
+    }
+
+    public Cursor obtenerLotes() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM Campos", null); // Ajusta la consulta según tu estructura de base de datos
+    }
+
 }

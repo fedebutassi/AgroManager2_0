@@ -1,6 +1,12 @@
 package com.example.agromanager2_0;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +15,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.agromanager2_0.database.MyDataBaseHelper;
+
 public class MiPerfil extends AppCompatActivity {
+
+    private TextView nombreTextView, apellidoTextView, fechaNacimientoTextView, localidadTextView, emailTextView;
+    private MyDataBaseHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mi_perfil);
 
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
@@ -22,10 +33,45 @@ public class MiPerfil extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Mi perfil");
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        nombreTextView = findViewById(R.id.nombreTextView);
+        apellidoTextView = findViewById(R.id.apellidoTextView);
+        fechaNacimientoTextView = findViewById(R.id.fechaNacimientoTextView);
+        localidadTextView = findViewById(R.id.localidadTextView);
+        emailTextView = findViewById(R.id.emailTextView);
+
+        dbHelper = new MyDataBaseHelper(this);
+
+        mostrarDatosUsuario();
+    }
+
+    private void mostrarDatosUsuario() {
+        SharedPreferences sharedPreferences = getSharedPreferences("userSession", 0);
+        String emailUsuario = sharedPreferences.getString("emailUsuario", "");
+
+        if (!emailUsuario.isEmpty()) {
+            Cursor cursor = dbHelper.obtenerDatosUsuario(emailUsuario);
+            if (cursor != null && cursor.moveToFirst()) {
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                String apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido"));
+                String fechaNacimiento = cursor.getString(cursor.getColumnIndexOrThrow("fecha_nacimiento"));
+                String localidad = cursor.getString(cursor.getColumnIndexOrThrow("localidad"));
+                String email = cursor.getString(cursor.getColumnIndexOrThrow("email"));
+
+
+                nombreTextView.setText(nombre);
+                apellidoTextView.setText(apellido);
+                fechaNacimientoTextView.setText(fechaNacimiento);
+                localidadTextView.setText(localidad);
+                emailTextView.setText(email);
+            } else {
+                Toast.makeText(this, "No se encontraron datos para este usuario.", Toast.LENGTH_SHORT).show();
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+        } else {
+            Toast.makeText(this, "No hay sesión activa.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

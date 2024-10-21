@@ -21,9 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agromanager2_0.R;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
-import com.example.agromanager2_0.labores.Labor;
-import com.example.agromanager2_0.labores.LaborAdapter;
-import com.example.agromanager2_0.labores.LaborStorage;
 import com.example.agromanager2_0.lotes.Lote;
 import com.example.agromanager2_0.lotes.LoteStorage;
 

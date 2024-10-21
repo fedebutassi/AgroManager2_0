@@ -22,4 +22,9 @@
         <item>240</item>
     </string-array>
     <string name="fab_description">Añadir nuevo elemento</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="localidad">Localidad</string>
+    <string name="email">Email</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.agromanager2_0.lotes;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -16,13 +17,14 @@ import com.example.agromanager2_0.R;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -33,103 +35,81 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
 
     private MyDataBaseHelper miDb;
     private Button buttonGuardarLote;
-    private EditText editTextNombreLote;
-    private EditText editTextSuperficie;
-
+    private EditText editTextNombreLote, editTextSuperficie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_lote);
 
+        Toolbar toolbar = findViewById(R.id.custom_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Lotes");
+
         miDb = new MyDataBaseHelper(this);
 
-        buttonGuardarLote = findViewById(R.id.buttonGuardarLote); // ID debe coincidir
         editTextNombreLote = findViewById(R.id.editTextNombreLote);
         editTextSuperficie = findViewById(R.id.editTextSuperficie);
+        buttonGuardarLote = findViewById(R.id.buttonGuardarLote);
 
-        buttonGuardarLote.setOnClickListener(v -> {
-            String nombreLote = editTextNombreLote.getText().toString();
-            String superficieStr = editTextSuperficie.getText().toString();
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewLotes);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        loteAdapter = new LoteAdapter(listaLotes);
+        recyclerView.setAdapter(loteAdapter);
 
-            if (!nombreLote.isEmpty() && !superficieStr.isEmpty() && selectedLocation != null) {
-                // Convertir la superficie a un entero
-                int superficie = Integer.parseInt(superficieStr);
-
-                // Obtener latitud y longitud de la ubicación seleccionada
-                double latitud = selectedLocation.latitude;
-                double longitud = selectedLocation.longitude;
-
-                // Insertar datos en la base de datos
-                boolean isInserted = miDb.insertarDatosLotes(nombreLote, superficie, latitud, longitud);
-
-                if (isInserted) {
-                    Toast.makeText(this, "Lote guardado exitosamente", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Error al guardar el lote", Toast.LENGTH_SHORT).show();
-                }
-
-                // Limpiar los campos después de guardar
-                editTextNombreLote.setText("");
-                editTextSuperficie.setText("");
-                mMap.clear();
-            } else {
-                Toast.makeText(this, "Por favor, complete todos los campos y seleccione una ubicación", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        cargarLotes();
 
         // Inicializar el fragmento del mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
 
+        buttonGuardarLote.setOnClickListener(v -> {
+            String nombre_campo = editTextNombreLote.getText().toString();
+            String hectareas = editTextSuperficie.getText().toString();
 
-        Toolbar toolbar = findViewById(R.id.custom_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Lotes");
+            if (selectedLocation != null && selectedLocation.latitude != 0 && selectedLocation.longitude != 0) {
+                if (!nombre_campo.isEmpty() && !hectareas.isEmpty()) {
+                    try {
+                        // Convertir la superficie a un número decimal
+                        double superficie = Double.parseDouble(hectareas);
 
-        Button guardarButton = findViewById(R.id.buttonGuardarLote);
-        EditText nombreEditText = findViewById(R.id.editTextNombreLote);
-        EditText superficieEditText = findViewById(R.id.editTextSuperficie);
+                        // Obtener las coordenadas de la ubicación seleccionada
+                        double latitud = selectedLocation.latitude;
+                        double longitud = selectedLocation.longitude;
 
-        // Configurar RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewLotes);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        loteAdapter = new LoteAdapter(listaLotes);
-        recyclerView.setAdapter(loteAdapter);
+                        // Operaciones de base de datos en un hilo separado
+                        Executor executor = Executors.newSingleThreadExecutor();
+                        executor.execute(() -> {
+                            boolean isInserted = miDb.insertarDatosLotes(nombre_campo, superficie, latitud, longitud);
+                            runOnUiThread(() -> {
+                                if (isInserted) {
+                                    Toast.makeText(this, "Lote guardado exitosamente", Toast.LENGTH_SHORT).show();
 
-        // Listener para el botón Guardar
-        guardarButton.setOnClickListener(v -> {
-            String nombreLote = nombreEditText.getText().toString();
-            String superficie = superficieEditText.getText().toString();
+                                    // Limpiar campos
+                                    editTextNombreLote.setText("");
+                                    editTextSuperficie.setText("");
+                                    mMap.clear();
 
-            if (!nombreLote.isEmpty() && !superficie.isEmpty() && selectedLocation != null) {
-                Lote nuevoLote = new Lote(nombreLote, superficie, selectedLocation);
-                LoteStorage.addLote(nuevoLote);
-                listaLotes.add(nuevoLote);
-                loteAdapter.notifyDataSetChanged();
-
-                nombreEditText.setText("");
-                superficieEditText.setText("");
-                mMap.clear();
-
-                // Enviar un resultado de éxito a Home para habilitar las opciones en el menú
-                Intent resultIntent = new Intent();
-                setResult(RESULT_OK, resultIntent);
-
-
-                // Notificar al adaptador que los datos han cambiado
-                loteAdapter.notifyDataSetChanged();
-
-                Toast.makeText(this, "Lote guardado exitosamente", Toast.LENGTH_SHORT).show();
+                                    // Volver a cargar lotes
+                                    cargarLotes();
+                                } else {
+                                    Toast.makeText(this, "Error al guardar el lote", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        });
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, "Superficie inválida", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(this, "Por favor, complete todos los campos y seleccione una ubicación", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Seleccione una ubicación en el mapa", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -161,4 +141,27 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void cargarLotes() {
+        listaLotes.clear();
+        Cursor cursor = miDb.obtenerLotes();
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String nombreLote = cursor.getString(1); // Asumiendo que el nombre está en la columna 1
+                double superficie = cursor.getDouble(2); // Asumiendo que la superficie está en la columna 2
+                double latitud = cursor.getDouble(3);
+                double longitud = cursor.getDouble(4);
+                LatLng ubicacion = new LatLng(latitud, longitud);
+
+                // Asegúrate de pasar 'superficie' como double
+                Lote lote = new Lote(nombreLote, superficie, latitud, longitud, ubicacion);
+                listaLotes.add(lote);
+            }
+            loteAdapter.notifyDataSetChanged(); // Actualiza el RecyclerView
+        }
+        if (cursor != null) {
+            cursor.close(); // Cierra el cursor para evitar fugas de memoria
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ package com.example.agromanager2_0.lotes;
 
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -34,12 +35,13 @@ public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder
         return new LoteViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull LoteViewHolder holder, int position) {
         Lote lote = lotes.get(position);
 
         holder.nombreLote.setText(lote.getNombre());
-        holder.superficieLote.setText("Superficie: " + lote.getSuperficie());
+        holder.superficieLote.setText("Superficie: " + lote.getHectareas());
 
         // Mostrar ubicación en el botón Ver en Google Maps
         if (lote.getUbicacion() != null) {

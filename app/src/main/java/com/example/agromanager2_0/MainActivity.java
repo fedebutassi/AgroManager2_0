@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
                 String password = editTextPassword.getText().toString();
 
                 if (!email.isEmpty() && !password.isEmpty()) {
-                    // Validar usuario con la base de datos
+
                     boolean isValid = miDb.validarUsuario(email, password);
 
                     if (isValid) {
                         Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                        // Aquí puedes redirigir al usuario a la siguiente actividad
+
                         Intent intent = new Intent(MainActivity.this, Home.class); // Cambia Home por tu actividad principal
                         startActivity(intent);
                         finish(); // Opcional: cerrar la actividad actual

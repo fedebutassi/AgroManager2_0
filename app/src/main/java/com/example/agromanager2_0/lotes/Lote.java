@@ -6,13 +6,16 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Lote {
     private String nombre;
-    private String superficie;
-    private LatLng ubicacion; // Añadir la ubicación
+    private double hectareas; // Asegúrate de que sea double, no int
+    private double latitud;
+    private double longitud;
+    private LatLng ubicacion;
 
-
-    public Lote(String nombre, String superficie, LatLng ubicacion) {
+    public Lote(String nombre, double superficie, double latitud, double longitud, LatLng ubicacion) {
         this.nombre = nombre;
-        this.superficie = superficie;
+        this.hectareas = hectareas; // Aquí no se debe usar Integer.parseInt
+        this.latitud = latitud;
+        this.longitud = longitud;
         this.ubicacion = ubicacion;
     }
 
@@ -21,8 +24,16 @@ public class Lote {
         return nombre;
     }
 
-    public String getSuperficie() {
-        return superficie;
+    public double getHectareas() {
+        return hectareas;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
     }
 
     public LatLng getUbicacion() {
