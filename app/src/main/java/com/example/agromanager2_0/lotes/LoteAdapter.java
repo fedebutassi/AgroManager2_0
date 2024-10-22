@@ -41,7 +41,7 @@ public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder
         Lote lote = lotes.get(position);
 
         holder.nombreLote.setText(lote.getNombre());
-        holder.superficieLote.setText("Superficie: " + lote.getHectareas());
+        holder.superficieLote.setText("Superficie: " + lote.getHectareas() +" has.");
 
         // Mostrar ubicación en el botón Ver en Google Maps
         if (lote.getUbicacion() != null) {

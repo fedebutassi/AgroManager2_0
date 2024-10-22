@@ -11,9 +11,9 @@ public class Lote {
     private double longitud;
     private LatLng ubicacion;
 
-    public Lote(String nombre, double superficie, double latitud, double longitud, LatLng ubicacion) {
+    public Lote(String nombre,double hectareas, double latitud, double longitud, LatLng ubicacion) {
         this.nombre = nombre;
-        this.hectareas = hectareas; // Aquí no se debe usar Integer.parseInt
+        this.hectareas = hectareas;
         this.latitud = latitud;
         this.longitud = longitud;
         this.ubicacion = ubicacion;

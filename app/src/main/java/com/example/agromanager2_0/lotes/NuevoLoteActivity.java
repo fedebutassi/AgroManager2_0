@@ -148,13 +148,13 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 String nombreLote = cursor.getString(1); // Asumiendo que el nombre está en la columna 1
-                double superficie = cursor.getDouble(2); // Asumiendo que la superficie está en la columna 2
+                double hectareas = cursor.getDouble(2); // Asumiendo que la superficie está en la columna 2
                 double latitud = cursor.getDouble(3);
                 double longitud = cursor.getDouble(4);
                 LatLng ubicacion = new LatLng(latitud, longitud);
 
                 // Asegúrate de pasar 'superficie' como double
-                Lote lote = new Lote(nombreLote, superficie, latitud, longitud, ubicacion);
+                Lote lote = new Lote(nombreLote, hectareas, latitud, longitud, ubicacion);
                 listaLotes.add(lote);
             }
             loteAdapter.notifyDataSetChanged(); // Actualiza el RecyclerView

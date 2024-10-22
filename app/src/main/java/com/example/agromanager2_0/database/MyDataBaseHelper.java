@@ -2,6 +2,7 @@ package com.example.agromanager2_0.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,6 +19,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_CULTIVOS = "Cultivos";
     private static final String TABLE_LABORES = "Labores";
     private static final String TABLE_PRODUCTOS_APLICADOS = "Productos_Aplicados";
+    private Context context;
 
 
     public MyDataBaseHelper(@Nullable Context context) {
@@ -118,6 +120,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+
     public boolean insertarDatosCultivos(String nombre_cultivo, String area_cubierta, String fecha_cultivo, String descripcion_cultivo){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -166,6 +169,8 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return existe;
     }
+
+
 
     public Cursor obtenerDatosUsuario(String email) {
         SQLiteDatabase db = this.getReadableDatabase();

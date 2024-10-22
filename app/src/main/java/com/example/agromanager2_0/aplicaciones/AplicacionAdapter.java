@@ -35,7 +35,7 @@ public class AplicacionAdapter extends RecyclerView.Adapter<AplicacionAdapter.Ap
         holder.nombreAplicacion.setText(aplicacion.getNombreAplicacion());
         holder.fechaAplicacion.setText("Fecha: " + aplicacion.getFechaAplicacion());
         holder.loteAsociado.setText("Lote: " + aplicacion.getLote());
-        holder.areaCubierta.setText("Area cubierta (has): " + aplicacion.getAreaCubierta());
+        holder.areaCubierta.setText("Area cubierta: " + aplicacion.getAreaCubierta() + "has.");
         holder.descripcionAplicacion.setText("Descripción: " + aplicacion.getDescripcionAplicacacion());
     }
 
