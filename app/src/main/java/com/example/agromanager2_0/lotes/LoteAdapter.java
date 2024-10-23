@@ -78,6 +78,12 @@ public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder
             nombreLote = itemView.findViewById(R.id.nombre_lote);
             superficieLote = itemView.findViewById(R.id.superficie_lote);
             verMapaButton = itemView.findViewById(R.id.ver_mapa_button);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
         }
     }
 

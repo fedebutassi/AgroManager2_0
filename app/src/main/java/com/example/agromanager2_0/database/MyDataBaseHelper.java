@@ -1,25 +1,30 @@
 package com.example.agromanager2_0.database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.agromanager2_0.lotes.Lote;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyDataBaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION =7;
+    private static final int DATABASE_VERSION =8;
     private static final String DATABASE_NOMBRE = "agromanager.db";
 
     private static final String TABLE_USUARIOS = "Usuarios";
-    private static final String TABLE_CAMPOS = "Campos";
+    public static final String TABLE_CAMPOS = "Campos";
     private static final String TABLE_CULTIVOS = "Cultivos";
     private static final String TABLE_LABORES = "Labores";
     private static final String TABLE_PRODUCTOS_APLICADOS = "Productos_Aplicados";
-    private Context context;
 
 
     public MyDataBaseHelper(@Nullable Context context) {
@@ -121,13 +126,14 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertarDatosCultivos(String nombre_cultivo, String area_cubierta, String fecha_cultivo, String descripcion_cultivo){
+    public boolean insertarDatosCultivos(String nombre_cultivo,  String fecha_cultivo,String lote_cultivo,String area_cubierta, String descripcion_cultivo){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("nombre_cultivo", nombre_cultivo);
-        contentValues.put("area_cubierta", area_cubierta);
         contentValues.put("fecha_cultivo", fecha_cultivo);
+        contentValues.put("lote_cultivo", lote_cultivo);
+        contentValues.put("area_cubierta", area_cubierta);
         contentValues.put("descripcion_cultivo", descripcion_cultivo);
 
         long result = db.insert(TABLE_CULTIVOS, null, contentValues);
@@ -182,5 +188,44 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM Campos", null); // Ajusta la consulta según tu estructura de base de datos
     }
+    public Cursor obtenerLabores() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM Labores", null); // Ajusta la consulta según tu estructura de base de datos
+    }
+
+    public Cursor obtenerCultivos(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM Cultivos", null);
+    }
+
+    public Cursor obtenerAplicaciones(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM Productos_Aplicados", null);
+    }
+
+
+    public List<Lote> obtenerLotesLista() {
+        List<Lote> listaLotes = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_CAMPOS, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String nombreCampo = cursor.getString(1); // nombre_campo está en la columna 1
+                double hectareas = cursor.getDouble(2); // hectareas está en la columna 2
+                double latitud = cursor.getDouble(3); // latitud está en la columna 3
+                double longitud = cursor.getDouble(4); // longitud está en la columna 4
+                LatLng ubicacion = new LatLng(latitud, longitud);
+
+                // Crear un nuevo objeto Lote (o Campo, si ese es el nombre adecuado) y agregarlo a la lista
+                Lote lote = new Lote(nombreCampo, hectareas, latitud, longitud, ubicacion);
+                listaLotes.add(lote);
+            }
+            cursor.close();
+        }
+
+        return listaLotes;
+    }
+
 
 }

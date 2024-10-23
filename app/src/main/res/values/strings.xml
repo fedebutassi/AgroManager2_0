@@ -27,4 +27,8 @@
     <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
     <string name="localidad">Localidad</string>
     <string name="email">Email</string>
+    <string name="mis_lotes">Mis lotes:</string>
+    <string name="mis_labores">Mis labores:</string>
+    <string name="mis_cultivos">Mis cultivos:</string>
+    <string name="mis_aplicaciones">Mis aplicaciones:</string>
 </resources>

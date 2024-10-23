@@ -24,7 +24,6 @@ import java.util.List;
 
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.lotes.Lote;
-import com.example.agromanager2_0.lotes.LoteStorage;
 
 public class LaboresActivity extends AppCompatActivity {
 
@@ -59,18 +58,25 @@ public class LaboresActivity extends AppCompatActivity {
         recyclerViewLabores = findViewById(R.id.recyclerViewLabores);
 
         // Cargar lotes en el Spinner
+        List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
         List<String> nombresLotes = new ArrayList<>();
-        for (Lote lote : LoteStorage.getLotes()) {
-            nombresLotes.add(lote.getNombre());
+        for (Lote lote : lotesDesdeDb) {
+            if (lote != null && lote.getNombre() != null) {  // Verifica que lote y nombre no sean nulos
+                nombresLotes.add(lote.getNombre());
+            }
         }
 
-        // Log para comprobar cuántos lotes se están cargando
-        Log.d("LaboresActivity", "Lotes disponibles: " + nombresLotes.size());
+        if (nombresLotes.isEmpty()) {
+            Log.d("CultivoActivity", "No se encontraron lotes en la base de datos.");
+            Toast.makeText(this, "No hay lotes disponibles.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size());
 
-        // Adaptador para el Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLotes.setAdapter(adapter);
+            // Configura el ArrayAdapter y asigna al Spinner
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerLotes.setAdapter(adapter);
+        }
 
         // Inicializar la lista de labores una sola vez
         listaLabores = LaborStorage.getLabores();  // Carga las labores solo una vez
@@ -101,7 +107,7 @@ public class LaboresActivity extends AppCompatActivity {
                     // Verificar si la labor ya existe para evitar duplicados
                     boolean existeLabor = false;
                     for (Labor labor : listaLabores) {
-                        if (labor.getNombre().equals(nombreLabor) && labor.getFecha().equals(fechaSeleccionada)) {
+                        if (labor.getNombreLabor().equals(nombreLabor) && labor.getFecha().equals(fechaSeleccionada)) {
                             existeLabor = true;
                             break;
                         }
@@ -109,7 +115,7 @@ public class LaboresActivity extends AppCompatActivity {
 
                     if (!existeLabor) {
                         // Crear nueva labor
-                        Labor nuevaLabor = new Labor(nombreLabor, fechaSeleccionada, loteSeleccionado, descripcion);
+                        Labor nuevaLabor = new Labor(nombreLabor, fechaSeleccionada, loteSeleccionado, descripcion);;
                         boolean insertadoExitosamente = miDb.insertarDatosLabores(nombreLabor, descripcion, fechaSeleccionada);
 
                         if (insertadoExitosamente) {
@@ -117,7 +123,7 @@ public class LaboresActivity extends AppCompatActivity {
                             listaLabores.add(nuevaLabor);
 
                             // Verificación mediante Log
-                            Log.d("LaboresActivity", "Labor guardada: " + nuevaLabor.getNombre());
+                            Log.d("LaboresActivity", "Labor guardada: " + nuevaLabor.getNombreLabor());
                             Log.d("LaboresActivity", "Cantidad de labores guardadas: " + listaLabores.size());
 
                             // Notificar al adaptador que los datos han cambiado

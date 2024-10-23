@@ -19,6 +19,9 @@ public class Lote {
         this.ubicacion = ubicacion;
     }
 
+    public Lote(String nombre) {
+    }
+
 
     public String getNombre() {
         return nombre;

@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.agromanager2_0.R;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.lotes.Lote;
-import com.example.agromanager2_0.lotes.LoteStorage;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,22 +64,27 @@ public class CultivoActivity extends AppCompatActivity {
         recyclerViewCultivos = findViewById(R.id.recyclerViewCultivos);
         recyclerViewCultivos.setLayoutManager(new LinearLayoutManager(this)); // Inicialización movida al principio
 
+        List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
         List<String> nombresLotes = new ArrayList<>();
-        for (Lote lote : LoteStorage.getLotes()) {
-            nombresLotes.add(lote.getNombre());
+        for (Lote lote : lotesDesdeDb) {
+            if (lote != null && lote.getNombre() != null) {  // Verifica que lote y nombre no sean nulos
+                nombresLotes.add(lote.getNombre());
+            }
         }
 
-        // Log para comprobar cuántos lotes se están cargando
-        Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size()); // Cambiado el nombre del log
+        if (nombresLotes.isEmpty()) {
+            Log.d("CultivoActivity", "No se encontraron lotes en la base de datos.");
+            Toast.makeText(this, "No hay lotes disponibles.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLotes.setAdapter(adapter);
+            // Configura el ArrayAdapter y asigna al Spinner
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerLotes.setAdapter(adapter);
+        }
 
-        // Inicializar la lista de cultivos una sola vez
-        listaCultivos = CultivoStorage.getCultivos(); // Cambio para cargar cultivos desde el almacenamiento
-
-        // Inicializa el RecyclerView y el adaptador
+        listaCultivos = CultivoStorage.getCultivos();
         cultivoAdapter = new CultivoAdapter(listaCultivos);
         recyclerViewCultivos.setAdapter(cultivoAdapter);
 
@@ -105,9 +109,9 @@ public class CultivoActivity extends AppCompatActivity {
 
                     if (!existeCultivo) {
                         // Crear nueva labor
-                        Cultivo nuevoCultivo = new Cultivo(nombreCultivo, fechaSeleccionada, loteSeleccionado, areaCubiertaPorCultivo, descripcionCultivo);
+                        Cultivo nuevoCultivo = new Cultivo(nombreCultivo, fechaSeleccionada,  areaCubiertaPorCultivo, descripcionCultivo);
 
-                        boolean insertadoExitosamente = miDb.insertarDatosCultivos(nombreCultivo, areaCubiertaPorCultivo, fechaSeleccionada, descripcionCultivo);
+                        boolean insertadoExitosamente = miDb.insertarDatosCultivos(nombreCultivo, areaCubiertaPorCultivo, fechaSeleccionada, descripcionCultivo, loteSeleccionado);
 
 
                         if (insertadoExitosamente) {
@@ -181,5 +185,6 @@ public class CultivoActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
     }
+
 
 }

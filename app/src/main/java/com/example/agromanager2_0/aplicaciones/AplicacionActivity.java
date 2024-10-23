@@ -66,18 +66,25 @@ public class AplicacionActivity extends AppCompatActivity {
 
         recyclerViewAplicaciones = findViewById(R.id.recyclerViewAplicaciones);
 
+        List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
         List<String> nombresLotes = new ArrayList<>();
-        for (Lote lote : LoteStorage.getLotes()) {
-            nombresLotes.add(lote.getNombre());
+        for (Lote lote : lotesDesdeDb) {
+            if (lote != null && lote.getNombre() != null) {  // Verifica que lote y nombre no sean nulos
+                nombresLotes.add(lote.getNombre());
+            }
         }
 
-        // Log para comprobar cuántos lotes se están cargando
-        Log.d("AplicacionActivity", "Lotes disponibles: " + nombresLotes.size());
+        if (nombresLotes.isEmpty()) {
+            Log.d("CultivoActivity", "No se encontraron lotes en la base de datos.");
+            Toast.makeText(this, "No hay lotes disponibles.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size());
 
-        // Adaptador para el Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLotes.setAdapter(adapter);
+            // Configura el ArrayAdapter y asigna al Spinner
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerLotes.setAdapter(adapter);
+        }
 
         // Inicializar la lista de labores una sola vez
         listaAplicaciones = AplicacionStorage.getAplicacion();
@@ -115,7 +122,7 @@ public class AplicacionActivity extends AppCompatActivity {
 
                     if (!existeAplicacion) {
                         // Crear nueva labor
-                        Aplicacion nuevaAplicacion = new Aplicacion(nombreAplicacion, fechaSeleccionada, loteSeleccionado, areaCubierta,descripcionAplicacion);
+                        Aplicacion nuevaAplicacion = new Aplicacion(nombreAplicacion, fechaSeleccionada, areaCubierta,descripcionAplicacion);
 
                         boolean isInserted = miDb.insertarDatosAplicaciones(
                                 nombreAplicacion,                // nombre_producto

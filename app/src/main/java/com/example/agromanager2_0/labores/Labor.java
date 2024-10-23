@@ -2,20 +2,20 @@ package com.example.agromanager2_0.labores;
 
 // Representación de una Labor
 public class Labor {
-    private String nombre;
+    private String nombreLabor;
     private String fecha;
     private String lote;
     private String descripcion;
 
-    public Labor(String nombre, String fecha, String lote, String descripcion) {
-        this.nombre = nombre;
+    public Labor(String nombreLabor, String fecha, String lote, String descripcion) {
+        this.nombreLabor = nombreLabor;
         this.fecha = fecha;
-        this.lote = lote;
+        this.lote = "";
         this.descripcion = descripcion;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreLabor() {
+        return nombreLabor;
     }
 
     public String getFecha() {

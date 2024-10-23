@@ -30,9 +30,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.agromanager2_0.cultivos.Cultivo;
+import com.example.agromanager2_0.cultivos.CultivoAdapter;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
 import com.example.agromanager2_0.cultivos.CultivoActivity;
+import com.example.agromanager2_0.labores.LaborAdapter;
 import com.example.agromanager2_0.labores.LaboresActivity;
 import com.example.agromanager2_0.lotes.Lote;
 import com.example.agromanager2_0.lotes.LoteAdapter;
@@ -45,10 +48,9 @@ import android.app.Activity;
 
 import java.util.ArrayList;
 
-public class Home extends AppCompatActivity {
-    private RecyclerView recyclerViewLotes;
-    private LoteAdapter loteAdapter;
-    private ArrayList<Lote> listaLotes = new ArrayList<>();
+public class MisCultivos extends AppCompatActivity {
+    private CultivoAdapter cultivoAdapter;
+    private final ArrayList<Cultivo> listaCultivos = new ArrayList<>();
     private MyDataBaseHelper miDb;
     private ActivityResultLauncher<Intent> loteActivityLauncher;
 
@@ -56,7 +58,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_mis_cultivos);
 
         miDb = new MyDataBaseHelper(this);
 
@@ -64,17 +66,17 @@ public class Home extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        cargarLotes(); // Carga los lotes al volver
+                        cargarCultivos(); // Carga los lotes al volver
                     }
                 }
         );
-        recyclerViewLotes = findViewById(R.id.recycler_viewLotesHome);
-        recyclerViewLotes.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerViewCultivos = findViewById(R.id.recycler_viewCultivosHome);
+        recyclerViewCultivos.setLayoutManager(new LinearLayoutManager(this));
 
-        loteAdapter = new LoteAdapter(listaLotes);
-        recyclerViewLotes.setAdapter(loteAdapter);
+        cultivoAdapter = new CultivoAdapter(listaCultivos);
+        recyclerViewCultivos.setAdapter(cultivoAdapter);
 
-        cargarLotes(); // Carga los lotes inicialmente
+        cargarCultivos(); // Carga los lotes inicialmente
 
         ImageButton imageButton5 = findViewById(R.id.signomas);
         imageButton5.setOnClickListener(v -> showBottomSheetDialog(v));
@@ -104,19 +106,11 @@ public class Home extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setContentDescription("Añadir nuevo elemento");
 
-        ImageButton imageButton = findViewById(R.id.imageButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton imageButton4 = findViewById(R.id.imageButton4);
+        imageButton4.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
-                accesoACultivos();
-            }
-        });
-
-        ImageButton imageButton3 = findViewById(R.id.imageButton3);
-        imageButton3.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                accesoAAplicaciones();
+            public void onClick(View view4){
+                accesoALotes();
             }
         });
     }
@@ -124,31 +118,40 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        cargarLotes(); // Carga los lotes cada vez que se reanuda la actividad
+        cargarCultivos(); // Carga los lotes cada vez que se reanuda la actividad
     }
 
-    private void cargarLotes() {
-        listaLotes.clear(); // Limpia la lista antes de cargar
-        Cursor cursor = miDb.obtenerLotes();
-        if (cursor != null && cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                String nombreLote = cursor.getString(1);
-                double hectareas = cursor.getDouble(2);
-                double latitud = cursor.getDouble(3);
-                double longitud = cursor.getDouble(4);
-                LatLng ubicacion = new LatLng(latitud, longitud);
+    private void cargarCultivos() {
+        listaCultivos.clear(); // Limpia la lista antes de cargar
+        Cursor cursor = miDb.obtenerCultivos();
 
-                Lote lote = new Lote(nombreLote, hectareas, latitud, longitud, ubicacion);
-                listaLotes.add(lote);
+        if (cursor != null && cursor.getCount() > 0) {
+            logColumnasCursor(cursor);
+            while (cursor.moveToFirst()) {
+
+                String id_cultivo = cursor.getString(0);
+                String nombre_cultivo = cursor.getString(1);
+                String fecha_cultivo = cursor.getString(2);
+
+                String area_cubierta = cursor.getString(4);
+                String descripcion_cultivo = cursor.getString(5);
+
+                Cultivo cultivo = new Cultivo(nombre_cultivo, area_cubierta,fecha_cultivo,descripcion_cultivo);
+                listaCultivos.add(cultivo);
             }
-            loteAdapter.notifyDataSetChanged(); // Notifica al adaptador que los datos han cambiado
+            cultivoAdapter.notifyDataSetChanged(); // Notifica al adaptador que los datos han cambiado
         }
         if (cursor != null) {
             cursor.close(); // Cierra el cursor para evitar fugas de memoria
         }
     }
 
-
+    private void logColumnasCursor(Cursor cursor) {
+        String[] columnNames = cursor.getColumnNames();
+        for (int i = 0; i < columnNames.length; i++) {
+            Log.d("Cursor Column Info", "Posición: " + i + ", Nombre: " + columnNames[i]);
+        }
+    }
     public void irAMisLabores(){
         Intent intent = new Intent(this, MisLabores.class);
         startActivity(intent);
@@ -157,16 +160,6 @@ public class Home extends AppCompatActivity {
 
     public void irAMiPerfil(){
         Intent intent = new Intent(this, MiPerfil.class);
-        startActivity(intent);
-    }
-
-    public void accesoACultivos(){
-        Intent intent = new Intent(this, MisCultivos.class);
-        startActivity(intent);
-    }
-
-    public void accesoAAplicaciones(){
-        Intent intent = new Intent(this, MisAplicaciones.class);
         startActivity(intent);
     }
 
@@ -266,9 +259,9 @@ public class Home extends AppCompatActivity {
         startActivity(intent);
     }
     /*Implementacion de menu desplegable con botones
-    *   "Configuracion"
-    *   "Editar perfil"
-    *   "Cerrar sesion"*/
+     *   "Configuracion"
+     *   "Editar perfil"
+     *   "Cerrar sesion"*/
     private void showBottomSheetDialog2(View view2){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
@@ -292,7 +285,7 @@ public class Home extends AppCompatActivity {
 
         bottomSheetView.findViewById(R.id.cerrarSesion).setOnClickListener(v ->{
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MisCultivos.this);
             builder.setMessage(R.string.preguntaUsuario);
 
             builder.setPositiveButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
@@ -324,7 +317,7 @@ public class Home extends AppCompatActivity {
         editor.apply();
 
         // Mostrar un mensaje que la sesión se ha cerrado
-        Toast.makeText(Home.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MisCultivos.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
 
         // Finalizar todas las actividades y salir de la aplicación
         finishAffinity();  // Cierra todas las actividades y sale de la app
@@ -560,6 +553,8 @@ public class Home extends AppCompatActivity {
         public boolean isVisible() { return false; }
         // ... otros métodos omitidos por simplicidad
     }
-
-
+    public void accesoALotes(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
 }

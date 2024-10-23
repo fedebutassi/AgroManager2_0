@@ -2,16 +2,16 @@ package com.example.agromanager2_0.cultivos;
 
 public class Cultivo {
 
-    private String Cultivo;
-    private String fechaCultivo;
-    private String lote;
-    private String areaCubiertaPorCultivo;
-    private String descripcionCultivo;
+    private final String Cultivo;
+    private final String fechaCultivo;
 
-    public Cultivo(String Cultivo, String fechaAplicacionCultivo, String lote, String areaCubiertaPorCultivo, String descripcionCultivo) {
+    private final String areaCubiertaPorCultivo;
+    private final String descripcionCultivo;
+
+    public Cultivo(String Cultivo, String fechaAplicacionCultivo, String areaCubiertaPorCultivo, String descripcionCultivo) {
         this.Cultivo = Cultivo;
         this.fechaCultivo = fechaAplicacionCultivo;
-        this.lote = lote;
+
         this.areaCubiertaPorCultivo = areaCubiertaPorCultivo;
         this.descripcionCultivo = descripcionCultivo;
     }
@@ -24,8 +24,8 @@ public class Cultivo {
         return fechaCultivo;
     }
 
-    public String getLote() {
-        return lote;
+    public String getLoteCultivo() {
+        return null;
     }
 
     public String getAreaCubiertaPorCultivo() {

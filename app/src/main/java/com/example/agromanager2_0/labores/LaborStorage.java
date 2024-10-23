@@ -8,7 +8,7 @@ public class LaborStorage {
 
     public static void addLabor(Labor labor) {
         for (Labor l : labores) {
-            if (l.getNombre().equals(labor.getNombre()) && l.getFecha().equals(labor.getFecha())) {
+            if (l.getNombreLabor().equals(labor.getNombreLabor()) && l.getFecha().equals(labor.getFecha())) {
 
                 return;
             }

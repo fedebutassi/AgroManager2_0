@@ -6,17 +6,19 @@ public class Aplicacion {
 
     private String nombreAplicacion;
     private String fechaAplicacion;
-    private String lote;
+
     private String areaCubierta;
     private String descripcionAplicacacion;
 
-    public Aplicacion(String nombreAplicacion, String fechaAplicacion, String lote, String areaCubierta, String descripcionAplicacacion) {
+    public Aplicacion(String nombreAplicacion, String fechaAplicacion, String areaCubierta, String descripcionAplicacacion) {
         this.nombreAplicacion = nombreAplicacion;
         this.fechaAplicacion = fechaAplicacion;
-        this.lote = lote;
         this.areaCubierta = areaCubierta;
         this.descripcionAplicacacion = descripcionAplicacacion;
     }
+
+
+
 
     public String getNombreAplicacion() {
         return nombreAplicacion;
@@ -26,9 +28,6 @@ public class Aplicacion {
         return fechaAplicacion;
     }
 
-    public String getLote() {
-        return lote;
-    }
 
     public String getAreaCubierta(){
         return areaCubierta;
@@ -36,5 +35,9 @@ public class Aplicacion {
 
     public String getDescripcionAplicacacion() {
         return descripcionAplicacacion;
+    }
+
+    public String getLote() {
+        return null;
     }
 }

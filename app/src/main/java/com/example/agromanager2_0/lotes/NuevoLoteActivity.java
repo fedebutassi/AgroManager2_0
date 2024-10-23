@@ -3,6 +3,7 @@ package com.example.agromanager2_0.lotes;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,10 +73,8 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
             if (selectedLocation != null && selectedLocation.latitude != 0 && selectedLocation.longitude != 0) {
                 if (!nombre_campo.isEmpty() && !hectareas.isEmpty()) {
                     try {
-                        // Convertir la superficie a un número decimal
                         double superficie = Double.parseDouble(hectareas);
 
-                        // Obtener las coordenadas de la ubicación seleccionada
                         double latitud = selectedLocation.latitude;
                         double longitud = selectedLocation.longitude;
 
@@ -92,8 +91,9 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
                                     editTextSuperficie.setText("");
                                     mMap.clear();
 
-                                    // Volver a cargar lotes
-                                    cargarLotes();
+                                    // Devuelve el resultado
+                                    setResult(RESULT_OK);
+                                    finish(); // Finaliza la actividad
                                 } else {
                                     Toast.makeText(this, "Error al guardar el lote", Toast.LENGTH_SHORT).show();
                                 }
@@ -142,7 +142,8 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
         return super.onOptionsItemSelected(item);
     }
 
-    private void cargarLotes() {
+    public void cargarLotes() {
+        MyDataBaseHelper db = new MyDataBaseHelper(this);
         listaLotes.clear();
         Cursor cursor = miDb.obtenerLotes();
         if (cursor != null && cursor.getCount() > 0) {
@@ -153,7 +154,6 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
                 double longitud = cursor.getDouble(4);
                 LatLng ubicacion = new LatLng(latitud, longitud);
 
-                // Asegúrate de pasar 'superficie' como double
                 Lote lote = new Lote(nombreLote, hectareas, latitud, longitud, ubicacion);
                 listaLotes.add(lote);
             }

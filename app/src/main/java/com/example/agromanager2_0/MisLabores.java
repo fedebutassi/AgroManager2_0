@@ -33,6 +33,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
 import com.example.agromanager2_0.cultivos.CultivoActivity;
+import com.example.agromanager2_0.labores.Labor;
+import com.example.agromanager2_0.labores.LaborAdapter;
 import com.example.agromanager2_0.labores.LaboresActivity;
 import com.example.agromanager2_0.lotes.Lote;
 import com.example.agromanager2_0.lotes.LoteAdapter;
@@ -43,20 +45,23 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.app.Activity;
 
+import java.lang.ref.Reference;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Home extends AppCompatActivity {
-    private RecyclerView recyclerViewLotes;
-    private LoteAdapter loteAdapter;
-    private ArrayList<Lote> listaLotes = new ArrayList<>();
+public class MisLabores extends AppCompatActivity {
+
+    private final ArrayList<Labor> listaLabores = new ArrayList<>();
     private MyDataBaseHelper miDb;
     private ActivityResultLauncher<Intent> loteActivityLauncher;
+    private LaborAdapter laborAdapter; // Asegúrate de que el adaptador está correctamente definido
+    private final List<Labor> labores = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_mis_labores);
 
         miDb = new MyDataBaseHelper(this);
 
@@ -64,17 +69,17 @@ public class Home extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        cargarLotes(); // Carga los lotes al volver
+                        cargarLabores();
                     }
                 }
         );
-        recyclerViewLotes = findViewById(R.id.recycler_viewLotesHome);
-        recyclerViewLotes.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerViewLabores = findViewById(R.id.recycler_viewLaboresHome);
+        recyclerViewLabores.setLayoutManager(new LinearLayoutManager(this));
 
-        loteAdapter = new LoteAdapter(listaLotes);
-        recyclerViewLotes.setAdapter(loteAdapter);
+        laborAdapter = new LaborAdapter(listaLabores);
+        recyclerViewLabores.setAdapter(laborAdapter);
 
-        cargarLotes(); // Carga los lotes inicialmente
+        cargarLabores(); // Carga los lotes inicialmente
 
         ImageButton imageButton5 = findViewById(R.id.signomas);
         imageButton5.setOnClickListener(v -> showBottomSheetDialog(v));
@@ -94,15 +99,17 @@ public class Home extends AppCompatActivity {
                 irAMiPerfil();
             }
         });
-        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
-        irAMisLabores.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view4){
-                irAMisLabores();
-            }
-        });
+
         FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setContentDescription("Añadir nuevo elemento");
+
+        ImageButton imageButton4 = findViewById(R.id.imageButton4);
+        imageButton4.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view4){
+                accesoALotes();
+            }
+        });
 
         ImageButton imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -112,61 +119,46 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        ImageButton imageButton3 = findViewById(R.id.imageButton3);
-        imageButton3.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                accesoAAplicaciones();
-            }
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cargarLotes(); // Carga los lotes cada vez que se reanuda la actividad
+        cargarLabores(); // Carga los lotes cada vez que se reanuda la actividad
     }
 
-    private void cargarLotes() {
-        listaLotes.clear(); // Limpia la lista antes de cargar
-        Cursor cursor = miDb.obtenerLotes();
-        if (cursor != null && cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                String nombreLote = cursor.getString(1);
-                double hectareas = cursor.getDouble(2);
-                double latitud = cursor.getDouble(3);
-                double longitud = cursor.getDouble(4);
-                LatLng ubicacion = new LatLng(latitud, longitud);
+    private void cargarLabores() {
+        listaLabores.clear();
+        Cursor cursor = null;
+        try {
+            cursor = miDb.obtenerLabores();
+            if (cursor != null && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
 
-                Lote lote = new Lote(nombreLote, hectareas, latitud, longitud, ubicacion);
-                listaLotes.add(lote);
+                    String lote = cursor.getString(0);
+                    String nombreLabor = cursor.getString(1);
+                    String descripcion = cursor.getString(2);
+                    String fecha = cursor.getString(3);
+
+                    Log.d("MisLabores", "Nombre: " + nombreLabor + ", Descripción: " + descripcion + ", Fecha: " + fecha);
+                    Labor labor = new Labor(nombreLabor, fecha, lote, descripcion);
+                    listaLabores.add(labor);
+                }
+                laborAdapter.notifyDataSetChanged();
+            } else {
+                Log.e("Cursor Error", "No se encontraron labores.");
             }
-            loteAdapter.notifyDataSetChanged(); // Notifica al adaptador que los datos han cambiado
-        }
-        if (cursor != null) {
-            cursor.close(); // Cierra el cursor para evitar fugas de memoria
+        } finally {
+            if (cursor != null) {
+                cursor.close(); // Asegurarse de cerrar el cursor
+            }
         }
     }
 
-
-    public void irAMisLabores(){
-        Intent intent = new Intent(this, MisLabores.class);
-        startActivity(intent);
-    }
 
 
     public void irAMiPerfil(){
         Intent intent = new Intent(this, MiPerfil.class);
-        startActivity(intent);
-    }
-
-    public void accesoACultivos(){
-        Intent intent = new Intent(this, MisCultivos.class);
-        startActivity(intent);
-    }
-
-    public void accesoAAplicaciones(){
-        Intent intent = new Intent(this, MisAplicaciones.class);
         startActivity(intent);
     }
 
@@ -266,9 +258,9 @@ public class Home extends AppCompatActivity {
         startActivity(intent);
     }
     /*Implementacion de menu desplegable con botones
-    *   "Configuracion"
-    *   "Editar perfil"
-    *   "Cerrar sesion"*/
+     *   "Configuracion"
+     *   "Editar perfil"
+     *   "Cerrar sesion"*/
     private void showBottomSheetDialog2(View view2){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
@@ -292,7 +284,7 @@ public class Home extends AppCompatActivity {
 
         bottomSheetView.findViewById(R.id.cerrarSesion).setOnClickListener(v ->{
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MisLabores.this);
             builder.setMessage(R.string.preguntaUsuario);
 
             builder.setPositiveButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
@@ -324,7 +316,7 @@ public class Home extends AppCompatActivity {
         editor.apply();
 
         // Mostrar un mensaje que la sesión se ha cerrado
-        Toast.makeText(Home.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MisLabores.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
 
         // Finalizar todas las actividades y salir de la aplicación
         finishAffinity();  // Cierra todas las actividades y sale de la app
@@ -561,5 +553,12 @@ public class Home extends AppCompatActivity {
         // ... otros métodos omitidos por simplicidad
     }
 
-
+    public void accesoALotes(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
+    public void accesoACultivos(){
+        Intent intent = new Intent(this, MisCultivos.class);
+        startActivity(intent);
+    }
 }

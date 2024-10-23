@@ -33,7 +33,7 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
         Cultivo cultivo = cultivos.get(position);
         holder.Cultivo.setText(cultivo.getCultivo());
         holder.fechaCultivo.setText("Fecha: " + cultivo.getFechaCultivo());
-        holder.loteAsociado.setText("Lote: " + cultivo.getLote());
+        holder.loteAsociado.setText("Lote: " + cultivo.getLoteCultivo());
         holder.areaCubiertaPorCultivo.setText("Area cubierta (has): " + cultivo.getAreaCubiertaPorCultivo());
         holder.descripcioCultivo.setText("Descripción: " + cultivo.getDescripcionCultivo());
     }
