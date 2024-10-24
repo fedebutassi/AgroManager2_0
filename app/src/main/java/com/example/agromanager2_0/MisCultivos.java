@@ -110,13 +110,11 @@ public class MisCultivos extends AppCompatActivity {
         Cursor cursor = miDb.obtenerCultivos();
 
         if (cursor != null && cursor.getCount() > 0) {
-            logColumnasCursor(cursor);
-            while (cursor.moveToFirst()) {
 
-                String id_cultivo = cursor.getString(0);
+            while (cursor.moveToNext()) {
+
                 String nombre_cultivo = cursor.getString(1);
                 String fecha_cultivo = cursor.getString(2);
-
                 String area_cubierta = cursor.getString(4);
                 String descripcion_cultivo = cursor.getString(5);
 
@@ -130,12 +128,7 @@ public class MisCultivos extends AppCompatActivity {
         }
     }
 
-    private void logColumnasCursor(Cursor cursor) {
-        String[] columnNames = cursor.getColumnNames();
-        for (int i = 0; i < columnNames.length; i++) {
-            Log.d("Cursor Column Info", "Posición: " + i + ", Nombre: " + columnNames[i]);
-        }
-    }
+
     public void irAMisLabores(){
         Intent intent = new Intent(this, MisLabores.class);
         startActivity(intent);

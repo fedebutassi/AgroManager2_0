@@ -27,11 +27,9 @@ public class CultivoActivity extends AppCompatActivity {
     private Button fechaButton, guardarButton; // Sin cambios
     private RecyclerView recyclerViewCultivos; // Sin cambios
     private CultivoAdapter cultivoAdapter; // Sin cambios
-    private List<Cultivo> listaCultivos; // Sin cambios
-    private String fechaSeleccionada = ""; // Sin cambios
+    private static List<Cultivo> listaCultivos = new ArrayList<>();    private String fechaSeleccionada = ""; // Sin cambios
 
     MyDataBaseHelper miDb;
-    // Button buttonSeleccionarFechaCultivo, buttonGuardarCultivo; // Eliminada: innecesaria, ya hay referencias a fechaButton y guardarButton
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -66,12 +64,8 @@ public class CultivoActivity extends AppCompatActivity {
         }
 
         if (nombresLotes.isEmpty()) {
-            Log.d("CultivoActivity", "No se encontraron lotes en la base de datos.");
             Toast.makeText(this, "No hay lotes disponibles.", Toast.LENGTH_SHORT).show();
         } else {
-            Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size());
-
-            // Configura el ArrayAdapter y asigna al Spinner
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerLotes.setAdapter(adapter);
@@ -101,27 +95,17 @@ public class CultivoActivity extends AppCompatActivity {
                     }
 
                     if (!existeCultivo) {
-                        // Crear nueva labor
                         Cultivo nuevoCultivo = new Cultivo(nombreCultivo, fechaSeleccionada,  areaCubiertaPorCultivo, descripcionCultivo);
 
-                        boolean insertadoExitosamente = miDb.insertarDatosCultivos(nombreCultivo, areaCubiertaPorCultivo, fechaSeleccionada, descripcionCultivo, loteSeleccionado);
+                        boolean isInserted = miDb.insertarDatosCultivos(nombreCultivo, fechaSeleccionada,  areaCubiertaPorCultivo, descripcionCultivo);
 
 
-                        if (insertadoExitosamente) {
-                            // Agregar a la lista temporal de CultivoStorage
-                            CultivoStorage.addCultivo(nuevoCultivo);
+                        if (isInserted) {
 
-                            // Agregar directamente a la lista temporal
                             listaCultivos.add(nuevoCultivo);
 
-                            // Verificación mediante Log
-                            Log.d("CultivoActivity", "Cultivo guardado: " + nuevoCultivo.getCultivo());
-                            Log.d("CultivoActivity", "Cantidad de cultivos guardados: " + listaCultivos.size());
-
-                            // Notificar al adaptador que los datos han cambiado
                             cultivoAdapter.notifyDataSetChanged();
 
-                            // Limpiar los campos después de guardar
                             limpiarLotes();
 
                             Toast.makeText(this, "Cultivo guardado exitosamente en la base de datos", Toast.LENGTH_SHORT).show();

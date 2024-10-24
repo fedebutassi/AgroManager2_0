@@ -114,10 +114,6 @@ public class LaboresActivity extends AppCompatActivity {
                             // Agregar directamente a la lista temporal
                             listaLabores.add(nuevaLabor);
 
-                            // Verificación mediante Log
-                            Log.d("LaboresActivity", "Labor guardada: " + nuevaLabor.getNombreLabor());
-                            Log.d("LaboresActivity", "Cantidad de labores guardadas: " + listaLabores.size());
-
                             // Notificar al adaptador que los datos han cambiado
                             laborAdapter.notifyDataSetChanged();
 

@@ -1,6 +1,5 @@
 package com.example.agromanager2_0.database;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -125,13 +124,12 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean insertarDatosCultivos(String nombre_cultivo,  String fecha_cultivo,String lote_cultivo,String area_cubierta, String descripcion_cultivo){
+    public boolean insertarDatosCultivos(String nombre_cultivo, String fecha_cultivo, String area_cubierta, String descripcion_cultivo){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("nombre_cultivo", nombre_cultivo);
         contentValues.put("fecha_cultivo", fecha_cultivo);
-        contentValues.put("lote_cultivo", lote_cultivo);
         contentValues.put("area_cubierta", area_cubierta);
         contentValues.put("descripcion_cultivo", descripcion_cultivo);
 
