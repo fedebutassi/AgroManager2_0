@@ -1,25 +1,13 @@
 package com.example.agromanager2_0;
 
-import static com.example.agromanager2_0.lotes.NuevoLoteActivity.listaLotes;
-
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -30,27 +18,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.agromanager2_0.aplicaciones.Aplicacion;
-import com.example.agromanager2_0.aplicaciones.AplicacionAdapter;
+import com.example.agromanager2_0.aplicaciones.*;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
 import com.example.agromanager2_0.cultivos.CultivoActivity;
-import com.example.agromanager2_0.labores.Labor;
-import com.example.agromanager2_0.labores.LaborAdapter;
 import com.example.agromanager2_0.labores.LaboresActivity;
-import com.example.agromanager2_0.lotes.Lote;
-import com.example.agromanager2_0.lotes.LoteAdapter;
 import com.example.agromanager2_0.lotes.NuevoLoteActivity;
 import com.example.agromanager2_0.settings.SettingsActivity;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.app.Activity;
 
-import java.lang.ref.Reference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class MisAplicaciones extends AppCompatActivity {
 
@@ -58,7 +37,6 @@ public class MisAplicaciones extends AppCompatActivity {
     private MyDataBaseHelper miDb;
     private ActivityResultLauncher<Intent> loteActivityLauncher;
     private AplicacionAdapter aplicacionAdapter; // Asegúrate de que el adaptador está correctamente definido
-    private final List<Aplicacion> aplicaciones = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -225,7 +203,6 @@ public class MisAplicaciones extends AppCompatActivity {
         }
     }
 
-    // Método para abrir la pantalla correspondiente
     private void abrirNuevaPantalla(String pantalla) {
         Intent intent;
         switch (pantalla) {
@@ -256,7 +233,7 @@ public class MisAplicaciones extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            boolean loteCreado = true; // Indica que se creo un lote
+            boolean loteCreado = true;
         }
     }
 
@@ -266,10 +243,7 @@ public class MisAplicaciones extends AppCompatActivity {
         intent.putExtra("tipo", tipo);
         startActivity(intent);
     }
-    /*Implementacion de menu desplegable con botones
-     *   "Configuracion"
-     *   "Editar perfil"
-     *   "Cerrar sesion"*/
+
     private void showBottomSheetDialog2(View view2){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
@@ -277,7 +251,7 @@ public class MisAplicaciones extends AppCompatActivity {
         bottomSheetDialog.setContentView(bottomSheetView);
 
         bottomSheetView.findViewById(R.id.configuracion).setOnClickListener(v ->{
-            // Crear un intent para abrir la actividad de configuración
+
             Intent intent = new Intent(v.getContext(), SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             v.getContext().startActivity(intent);
@@ -318,17 +292,15 @@ public class MisAplicaciones extends AppCompatActivity {
     }
 
     private void cerrarSesionYSalir() {
-        // Eliminar los datos de sesión (por ejemplo, en SharedPreferences)
+
         SharedPreferences sharedPreferences = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();  // Limpiar todos los datos de sesión
+        editor.clear();
         editor.apply();
 
-        // Mostrar un mensaje que la sesión se ha cerrado
         Toast.makeText(MisAplicaciones.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
 
-        // Finalizar todas las actividades y salir de la aplicación
-        finishAffinity();  // Cierra todas las actividades y sale de la app
+        finishAffinity();
     }
 
     private void openMenuSuperior(String tipo) {
@@ -337,7 +309,7 @@ public class MisAplicaciones extends AppCompatActivity {
         startActivity(intent);
     }
 
-    class FakeMenuItem implements MenuItem {
+    static class FakeMenuItem implements MenuItem {
         private final int id;
 
         public FakeMenuItem(int id) {

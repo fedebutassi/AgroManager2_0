@@ -1,16 +1,14 @@
     package com.example.agromanager2_0.labores;
 
     import android.annotation.SuppressLint;
-    import android.view.LayoutInflater;
-    import android.view.View;
-    import android.view.ViewGroup;
+    import android.view.*;
     import android.widget.TextView;
     import androidx.annotation.NonNull;
     import androidx.recyclerview.widget.RecyclerView;
 
     import com.example.agromanager2_0.R;
 
-    import java.util.List;
+    import java.util.*;
 
     public class LaborAdapter extends RecyclerView.Adapter<LaborAdapter.LaborViewHolder> {
 

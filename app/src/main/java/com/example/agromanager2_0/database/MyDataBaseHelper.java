@@ -12,8 +12,7 @@ import androidx.annotation.Nullable;
 import com.example.agromanager2_0.lotes.Lote;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MyDataBaseHelper extends SQLiteOpenHelper {
 

@@ -1,13 +1,8 @@
 package com.example.agromanager2_0.aplicaciones;
 
 
-import static com.example.agromanager2_0.lotes.LoteStorage.lotes;
 
-
-import com.example.agromanager2_0.labores.Labor;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class AplicacionStorage {
 

@@ -1,13 +1,9 @@
 package com.example.agromanager2_0.lotes;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.*;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.NonNull;
@@ -22,11 +18,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
+import java.util.*;
 public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public static ArrayList<Lote> listaLotes = new ArrayList<>();

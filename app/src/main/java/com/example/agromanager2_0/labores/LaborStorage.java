@@ -1,7 +1,6 @@
 package com.example.agromanager2_0.labores;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class LaborStorage {
     private static List<Labor> labores = new ArrayList<>();

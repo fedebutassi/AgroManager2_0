@@ -1,9 +1,6 @@
 package com.example.agromanager2_0.cultivos;
 
-import com.example.agromanager2_0.cultivos.Cultivo;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CultivoStorage {
 

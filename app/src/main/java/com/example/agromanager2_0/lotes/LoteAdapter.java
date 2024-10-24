@@ -1,24 +1,18 @@
 package com.example.agromanager2_0.lotes;
 
-//**muestra los datos de los lotes en un RecyclerView**//
-
-
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agromanager2_0.R;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.List;
+import java.util.*;
 
 public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder> {
 

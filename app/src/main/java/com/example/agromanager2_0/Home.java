@@ -3,22 +3,12 @@ package com.example.agromanager2_0;
 import static com.example.agromanager2_0.lotes.NuevoLoteActivity.listaLotes;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -29,14 +19,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.agromanager2_0.lotes.*;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
 import com.example.agromanager2_0.cultivos.CultivoActivity;
 import com.example.agromanager2_0.labores.LaboresActivity;
-import com.example.agromanager2_0.lotes.Lote;
-import com.example.agromanager2_0.lotes.LoteAdapter;
-import com.example.agromanager2_0.lotes.NuevoLoteActivity;
 import com.example.agromanager2_0.settings.SettingsActivity;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;

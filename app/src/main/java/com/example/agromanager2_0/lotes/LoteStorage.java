@@ -1,7 +1,6 @@
 package com.example.agromanager2_0.lotes;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 //**clase auxiliar para almacenar los lotes**//
 
