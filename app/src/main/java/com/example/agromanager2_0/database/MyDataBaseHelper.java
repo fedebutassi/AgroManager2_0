@@ -215,7 +215,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
                 LatLng ubicacion = new LatLng(latitud, longitud);
 
                 // Crear un nuevo objeto Lote (o Campo, si ese es el nombre adecuado) y agregarlo a la lista
-                Lote lote = new Lote(nombreCampo, hectareas, latitud, longitud, ubicacion);
+                Lote lote = new Lote(nombreCampo, hectareas, ubicacion);
                 listaLotes.add(lote);
             }
             cursor.close();

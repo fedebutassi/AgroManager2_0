@@ -3,7 +3,6 @@ package com.example.agromanager2_0.cultivos;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.*;
 import androidx.activity.EdgeToEdge;
@@ -24,8 +23,7 @@ public class CultivoActivity extends AppCompatActivity {
     private EditText editTextCultivo, editTextDescripcionCultivo; // Sin cambios
     private EditText editTextAreaCubiertaPorCultivo; // Sin cambios
     private Spinner spinnerLotes; // Sin cambios
-    private Button fechaButton, guardarButton; // Sin cambios
-    private RecyclerView recyclerViewCultivos; // Sin cambios
+    private Button fechaButton;
     private CultivoAdapter cultivoAdapter; // Sin cambios
     private static List<Cultivo> listaCultivos = new ArrayList<>();    private String fechaSeleccionada = ""; // Sin cambios
 
@@ -42,7 +40,7 @@ public class CultivoActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Cultivos");
 
         editTextCultivo = findViewById(R.id.editTextCultivo);
@@ -50,9 +48,11 @@ public class CultivoActivity extends AppCompatActivity {
         spinnerLotes = findViewById(R.id.spinnerLotes);
         editTextAreaCubiertaPorCultivo = findViewById(R.id.editTextAreaCubiertaPorCultivo);
         fechaButton = findViewById(R.id.buttonSeleccionarFechaCultivo);
-        guardarButton = findViewById(R.id.buttonGuardarCultivo);
+        // Sin cambios
+        Button guardarButton = findViewById(R.id.buttonGuardarCultivo);
 
-        recyclerViewCultivos = findViewById(R.id.recyclerViewCultivos);
+        // Sin cambios
+        RecyclerView recyclerViewCultivos = findViewById(R.id.recyclerViewCultivos);
         recyclerViewCultivos.setLayoutManager(new LinearLayoutManager(this)); // Inicialización movida al principio
 
         List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
@@ -149,6 +149,7 @@ public class CultivoActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
+    @SuppressLint("SetTextI18n")
     private void limpiarLotes() { // Nuevo método para limpiar los campos
         editTextCultivo.setText("");
         editTextDescripcionCultivo.setText("");

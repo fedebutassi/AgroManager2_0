@@ -148,7 +148,7 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
                 double longitud = cursor.getDouble(4);
                 LatLng ubicacion = new LatLng(latitud, longitud);
 
-                Lote lote = new Lote(nombreLote, hectareas, latitud, longitud, ubicacion);
+                Lote lote = new Lote(nombreLote, hectareas, ubicacion);
                 listaLotes.add(lote);
             }
             loteAdapter.notifyDataSetChanged(); // Actualiza el RecyclerView

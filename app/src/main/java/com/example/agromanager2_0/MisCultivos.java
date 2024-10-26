@@ -6,7 +6,6 @@ import android.content.*;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -63,40 +62,20 @@ public class MisCultivos extends AppCompatActivity {
         cargarCultivos(); // Carga los lotes inicialmente
 
         ImageButton imageButton5 = findViewById(R.id.signomas);
-        imageButton5.setOnClickListener(v -> showBottomSheetDialog(v));
+        imageButton5.setOnClickListener(v -> showBottomSheetDialog());
 
         ImageButton buttonMenuSuperior = findViewById(R.id.menu_button);
-        buttonMenuSuperior.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view2){
-                showBottomSheetDialog2(view2);
-            }
-        });
+        buttonMenuSuperior.setOnClickListener(view2 -> showBottomSheetDialog2());
 
         ImageButton avatarMiPerfil = findViewById(R.id.avatar_button);
-        avatarMiPerfil.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view3){
-                irAMiPerfil();
-            }
-        });
+        avatarMiPerfil.setOnClickListener(view3 -> irAMiPerfil());
         ImageButton irAMisLabores = findViewById(R.id.imageButton2);
-        irAMisLabores.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view4){
-                irAMisLabores();
-            }
-        });
-        FloatingActionButton fab = findViewById(R.id.signomas);
+        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
+        @SuppressLint("CutPasteId") FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setContentDescription("Añadir nuevo elemento");
 
         ImageButton imageButton4 = findViewById(R.id.imageButton4);
-        imageButton4.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view4){
-                accesoALotes();
-            }
-        });
+        imageButton4.setOnClickListener(view4 -> accesoALotes());
     }
 
     @Override
@@ -105,6 +84,7 @@ public class MisCultivos extends AppCompatActivity {
         cargarCultivos(); // Carga los lotes cada vez que se reanuda la actividad
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void cargarCultivos() {
         listaCultivos.clear(); // Limpia la lista antes de cargar
         Cursor cursor = miDb.obtenerCultivos();
@@ -140,7 +120,7 @@ public class MisCultivos extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void showBottomSheetDialog(View view) {
+    private void showBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.bottom_sheet_menu, null);
@@ -175,22 +155,16 @@ public class MisCultivos extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    private boolean onMenuItemClick(MenuItem item) {
+    private void onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_nuevo_lote) {
             abrirNuevaPantalla("Lotes");
-            return true;
         } else if (id == R.id.menu_nueva_labor) {
             abrirNuevaPantalla("Labores");
-            return true;
         } else if (id == R.id.menu_nuevo_cultivo) {
             abrirNuevaPantalla("Cultivos");
-            return true;
         } else if (id == R.id.menu_nueva_aplicacion) {
             abrirNuevaPantalla("Aplicaciones");
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -224,22 +198,15 @@ public class MisCultivos extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            boolean loteCreado = true; // Indica que se creo un lote
-        }
+        // Indica que se creo un lote
     }
 
 
-    private void openFormActivity(String tipo) {
-        Intent intent = new Intent(this, FormActivity.class);
-        intent.putExtra("tipo", tipo);
-        startActivity(intent);
-    }
     /*Implementacion de menu desplegable con botones
      *   "Configuracion"
      *   "Editar perfil"
      *   "Cerrar sesion"*/
-    private void showBottomSheetDialog2(View view2){
+    private void showBottomSheetDialog2(){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.menusuperior, null);
@@ -256,7 +223,7 @@ public class MisCultivos extends AppCompatActivity {
         });
 
         bottomSheetView.findViewById(R.id.editarPerfil).setOnClickListener(v ->{
-            openMenuSuperior("Editar Perfil");
+            openMenuSuperior();
             bottomSheetDialog.dismiss();
         });
 
@@ -265,19 +232,11 @@ public class MisCultivos extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(MisCultivos.this);
             builder.setMessage(R.string.preguntaUsuario);
 
-            builder.setPositiveButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+            builder.setPositiveButton(R.string.Cancelar, (dialogInterface, i) -> {
 
-                }
             });
 
-            builder.setNegativeButton(R.string.salirConfirmar, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    cerrarSesionYSalir();
-                }
-            });
+            builder.setNegativeButton(R.string.salirConfirmar, (dialogInterface, i) -> cerrarSesionYSalir());
 
             builder.show();
         });
@@ -300,13 +259,13 @@ public class MisCultivos extends AppCompatActivity {
         finishAffinity();  // Cierra todas las actividades y sale de la app
     }
 
-    private void openMenuSuperior(String tipo) {
+    private void openMenuSuperior() {
         Intent intent = new Intent(this, MenuSuperior.class);
-        intent.putExtra("tipo", tipo);
+        intent.putExtra("tipo", "Editar Perfil");
         startActivity(intent);
     }
 
-    class FakeMenuItem implements MenuItem {
+    static class FakeMenuItem implements MenuItem {
         private final int id;
 
         public FakeMenuItem(int id) {

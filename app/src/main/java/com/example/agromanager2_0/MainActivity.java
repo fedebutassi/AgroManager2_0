@@ -2,7 +2,6 @@ package com.example.agromanager2_0;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -37,44 +36,31 @@ public class MainActivity extends AppCompatActivity {
         Button botonForgotPassword = findViewById(R.id.olvidasteContra);
 
 
-        botonIngresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = editTextEmail.getText().toString();
-                String password = editTextPassword.getText().toString();
+        botonIngresar.setOnClickListener(v -> {
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
 
-                if (!email.isEmpty() && !password.isEmpty()) {
+            if (!email.isEmpty() && !password.isEmpty()) {
 
-                    boolean isValid = miDb.validarUsuario(email, password);
+                boolean isValid = miDb.validarUsuario(email, password);
 
-                    if (isValid) {
-                        Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                if (isValid) {
+                    Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(MainActivity.this, Home.class); // Cambia Home por tu actividad principal
-                        startActivity(intent);
-                        finish(); // Opcional: cerrar la actividad actual
-                    } else {
-                        Toast.makeText(MainActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                    }
+                    Intent intent = new Intent(MainActivity.this, Home.class); // Cambia Home por tu actividad principal
+                    startActivity(intent);
+                    finish(); // Opcional: cerrar la actividad actual
                 } else {
-                    Toast.makeText(MainActivity.this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(MainActivity.this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
             }
         });
 
-        botonRegistro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                irARegistro();
-            }
-        });
+        botonRegistro.setOnClickListener(v -> irARegistro());
 
-        botonForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                irAOlvidoPassword();
-            }
-        });
+        botonForgotPassword.setOnClickListener(view -> irAOlvidoPassword());
 
 
     }

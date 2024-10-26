@@ -1,6 +1,7 @@
 package com.example.agromanager2_0.aplicaciones;
 
 
+import android.annotation.SuppressLint;
 import android.widget.TextView;
 import android.view.*;
 import androidx.annotation.NonNull;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class AplicacionAdapter extends RecyclerView.Adapter<AplicacionAdapter.AplicacionViewHolder>{
 
-    private List<Aplicacion> aplicaciones;
+    private final List<Aplicacion> aplicaciones;
 
     public AplicacionAdapter(List<Aplicacion> aplicaciones) {
         this.aplicaciones = aplicaciones;
@@ -27,6 +28,7 @@ public class AplicacionAdapter extends RecyclerView.Adapter<AplicacionAdapter.Ap
         return new AplicacionAdapter.AplicacionViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull AplicacionViewHolder holder, int position) {
         Aplicacion aplicacion = aplicaciones.get(position);

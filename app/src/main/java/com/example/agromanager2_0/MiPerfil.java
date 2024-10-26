@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 
+import java.util.Objects;
+
 public class MiPerfil extends AppCompatActivity {
 
     private TextView nombreTextView, apellidoTextView, fechaNacimientoTextView, localidadTextView, emailTextView;
@@ -23,7 +25,7 @@ public class MiPerfil extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Mi perfil");
 
         nombreTextView = findViewById(R.id.nombreTextView);

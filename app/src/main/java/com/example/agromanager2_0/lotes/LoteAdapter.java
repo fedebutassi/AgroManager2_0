@@ -16,7 +16,7 @@ import java.util.*;
 
 public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder> {
 
-    private List<Lote> lotes;
+    private final List<Lote> lotes;
 
     public LoteAdapter(List<Lote> lotes) {
         this.lotes = lotes;
@@ -72,11 +72,8 @@ public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder
             nombreLote = itemView.findViewById(R.id.nombre_lote);
             superficieLote = itemView.findViewById(R.id.superficie_lote);
             verMapaButton = itemView.findViewById(R.id.ver_mapa_button);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            itemView.setOnClickListener(view -> {
 
-                }
             });
         }
     }

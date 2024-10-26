@@ -1,5 +1,6 @@
 package com.example.agromanager2_0.cultivos;
 
+import android.annotation.SuppressLint;
 import android.view.*;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -9,7 +10,7 @@ import java.util.*;
 
 public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoViewHolder>{
 
-    private List<Cultivo> cultivos;
+    private final List<Cultivo> cultivos;
 
     public CultivoAdapter(List<Cultivo> cultivos) {
         this.cultivos = cultivos;
@@ -22,6 +23,7 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
         return new CultivoAdapter.CultivoViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CultivoAdapter.CultivoViewHolder holder, int position) {
         Cultivo cultivo = cultivos.get(position);

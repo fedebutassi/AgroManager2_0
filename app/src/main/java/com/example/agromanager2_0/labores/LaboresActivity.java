@@ -1,6 +1,7 @@
 package com.example.agromanager2_0.labores;
 
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,13 +22,13 @@ public class LaboresActivity extends AppCompatActivity {
 
     private EditText nombreLaborEditText, descripcionLaborEditText;
     private Spinner spinnerLotes;
-    private Button fechaButton, guardarButton;
-    private RecyclerView recyclerViewLabores;
+    private Button fechaButton;
     private LaborAdapter laborAdapter;
     private List<Labor> listaLabores;
     private String fechaSeleccionada = "";
     private MyDataBaseHelper miDb;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,7 @@ public class LaboresActivity extends AppCompatActivity {
         // Habilitar el botón atrás en la ActionBar
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Labores");
 
         // Inicializar vistas
@@ -46,8 +47,8 @@ public class LaboresActivity extends AppCompatActivity {
         descripcionLaborEditText = findViewById(R.id.editTextDescripcionLabor);
         spinnerLotes = findViewById(R.id.spinnerLotes);
         fechaButton = findViewById(R.id.buttonSeleccionarFecha);
-        guardarButton = findViewById(R.id.buttonGuardarLabor);
-        recyclerViewLabores = findViewById(R.id.recyclerViewLabores);
+        Button guardarButton = findViewById(R.id.buttonGuardarLabor);
+        findViewById(R.id.recyclerViewLabores);
 
         // Cargar lotes en el Spinner
         List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
@@ -107,7 +108,7 @@ public class LaboresActivity extends AppCompatActivity {
 
                     if (!existeLabor) {
                         // Crear nueva labor
-                        Labor nuevaLabor = new Labor(nombreLabor, fechaSeleccionada, loteSeleccionado, descripcion);;
+                        Labor nuevaLabor = new Labor(nombreLabor, fechaSeleccionada, descripcion);
                         boolean insertadoExitosamente = miDb.insertarDatosLabores(nombreLabor, descripcion, fechaSeleccionada);
 
                         if (insertadoExitosamente) {
@@ -163,6 +164,7 @@ public class LaboresActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
+    @SuppressLint("SetTextI18n")
     private void limpiarLabores() {
         nombreLaborEditText.setText("");
         descripcionLaborEditText.setText("");

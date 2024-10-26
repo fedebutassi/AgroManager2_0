@@ -22,8 +22,7 @@ public class AplicacionActivity extends AppCompatActivity {
     private EditText editTextNombreAplicacion, editTextDescripcionAplicacion;
     private EditText editTextAreaCubierta;
     private Spinner spinnerLotes;
-    private Button fechaButton, guardarButton;
-    private RecyclerView recyclerViewAplicaciones;
+    private Button fechaButton;
     private AplicacionAdapter aplicacionAdapter;
     private List<Aplicacion> listaAplicaciones;
     private String fechaSeleccionada = "";
@@ -42,7 +41,7 @@ public class AplicacionActivity extends AppCompatActivity {
         // Habilitar el botón atrás en la ActionBar
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Aplicaciones");
 
         // Inicializar vistas
@@ -51,9 +50,9 @@ public class AplicacionActivity extends AppCompatActivity {
         spinnerLotes = findViewById(R.id.spinnerLotes);
         editTextAreaCubierta = findViewById(R.id.editTextAreaCubierta);
         fechaButton = findViewById(R.id.buttonSeleccionarFechaAplicacion);
-        guardarButton = findViewById(R.id.buttonGuardarAplicacion);
+        Button guardarButton = findViewById(R.id.buttonGuardarAplicacion);
 
-        recyclerViewAplicaciones = findViewById(R.id.recyclerViewAplicaciones);
+        findViewById(R.id.recyclerViewAplicaciones);
 
         List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
         List<String> nombresLotes = new ArrayList<>();
@@ -79,7 +78,7 @@ public class AplicacionActivity extends AppCompatActivity {
         listaAplicaciones = AplicacionStorage.getAplicacion();
 
         // Inicializa el RecyclerView y el adaptador en onCreate o similar
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewAplicaciones);
+        @SuppressLint("CutPasteId") RecyclerView recyclerView = findViewById(R.id.recyclerViewAplicaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Inicializa la lista de labores desde LaborStorage
@@ -176,6 +175,7 @@ public class AplicacionActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
+    @SuppressLint("SetTextI18n")
     private void limpiarAplicacion() {
         editTextNombreAplicacion.setText("");
         editTextDescripcionAplicacion.setText("");

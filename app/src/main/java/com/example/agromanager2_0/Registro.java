@@ -55,7 +55,6 @@ public class Registro extends AppCompatActivity {
 
             if (nombreStr.isEmpty() || apellidoStr.isEmpty() || emailStr.isEmpty() || passwordStr.isEmpty()) {
                 Toast.makeText(Registro.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
-                return;
             }
 
         });

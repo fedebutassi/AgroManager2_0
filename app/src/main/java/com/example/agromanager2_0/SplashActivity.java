@@ -20,13 +20,10 @@ public class SplashActivity extends AppCompatActivity {
         int tiempoEspera = 3000; // 3 segundos
 
         // Usamos un Handler para esperar el tiempo y luego iniciar MainActivity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish(); // Cierra SplashActivity
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Cierra SplashActivity
         }, tiempoEspera);
     }
 }

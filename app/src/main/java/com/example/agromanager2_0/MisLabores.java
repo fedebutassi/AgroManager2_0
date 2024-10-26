@@ -64,42 +64,22 @@ public class MisLabores extends AppCompatActivity {
         cargarLabores(); // Carga los lotes inicialmente
 
         ImageButton imageButton5 = findViewById(R.id.signomas);
-        imageButton5.setOnClickListener(v -> showBottomSheetDialog(v));
+        imageButton5.setOnClickListener(this::showBottomSheetDialog);
 
         ImageButton buttonMenuSuperior = findViewById(R.id.menu_button);
-        buttonMenuSuperior.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view2){
-                showBottomSheetDialog2(view2);
-            }
-        });
+        buttonMenuSuperior.setOnClickListener(view2 -> showBottomSheetDialog2());
 
         ImageButton avatarMiPerfil = findViewById(R.id.avatar_button);
-        avatarMiPerfil.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view3){
-                irAMiPerfil();
-            }
-        });
+        avatarMiPerfil.setOnClickListener(view3 -> irAMiPerfil());
 
-        FloatingActionButton fab = findViewById(R.id.signomas);
+        @SuppressLint("CutPasteId") FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setContentDescription("Añadir nuevo elemento");
 
         ImageButton imageButton4 = findViewById(R.id.imageButton4);
-        imageButton4.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view4){
-                accesoALotes();
-            }
-        });
+        imageButton4.setOnClickListener(view4 -> accesoALotes());
 
         ImageButton imageButton = findViewById(R.id.imageButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                accesoACultivos();
-            }
-        });
+        imageButton.setOnClickListener(view -> accesoACultivos());
 
     }
 
@@ -111,9 +91,7 @@ public class MisLabores extends AppCompatActivity {
 
     private void cargarLabores() {
         listaLabores.clear();
-        Cursor cursor = null;
-        try {
-            cursor = miDb.obtenerLabores();
+        try (Cursor cursor = miDb.obtenerLabores()) {
             if (cursor != null && cursor.getCount() > 0) {
                 while (cursor.moveToNext()) {
 
@@ -123,18 +101,15 @@ public class MisLabores extends AppCompatActivity {
                     String fecha = cursor.getString(3);
 
                     Log.d("MisLabores", "Nombre: " + nombreLabor + ", Descripción: " + descripcion + ", Fecha: " + fecha);
-                    Labor labor = new Labor(nombreLabor, fecha, lote, descripcion);
+                    Labor labor = new Labor(nombreLabor, fecha, descripcion);
                     listaLabores.add(labor);
                 }
                 laborAdapter.notifyDataSetChanged();
             } else {
                 Log.e("Cursor Error", "No se encontraron labores.");
             }
-        } finally {
-            if (cursor != null) {
-                cursor.close(); // Asegurarse de cerrar el cursor
-            }
         }
+        // Asegurarse de cerrar el cursor
     }
 
 
@@ -144,7 +119,7 @@ public class MisLabores extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void showBottomSheetDialog(View view) {
+    private void showBottomSheetDialog(View ignoredView) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.bottom_sheet_menu, null);
@@ -179,22 +154,16 @@ public class MisLabores extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    private boolean onMenuItemClick(MenuItem item) {
+    private void onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_nuevo_lote) {
             abrirNuevaPantalla("Lotes");
-            return true;
         } else if (id == R.id.menu_nueva_labor) {
             abrirNuevaPantalla("Labores");
-            return true;
         } else if (id == R.id.menu_nuevo_cultivo) {
             abrirNuevaPantalla("Cultivos");
-            return true;
         } else if (id == R.id.menu_nueva_aplicacion) {
             abrirNuevaPantalla("Aplicaciones");
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -228,22 +197,15 @@ public class MisLabores extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            boolean loteCreado = true; // Indica que se creo un lote
-        }
+        // Indica que se creo un lote
     }
 
 
-    private void openFormActivity(String tipo) {
-        Intent intent = new Intent(this, FormActivity.class);
-        intent.putExtra("tipo", tipo);
-        startActivity(intent);
-    }
     /*Implementacion de menu desplegable con botones
      *   "Configuracion"
      *   "Editar perfil"
      *   "Cerrar sesion"*/
-    private void showBottomSheetDialog2(View view2){
+    private void showBottomSheetDialog2(){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.menusuperior, null);
@@ -260,7 +222,7 @@ public class MisLabores extends AppCompatActivity {
         });
 
         bottomSheetView.findViewById(R.id.editarPerfil).setOnClickListener(v ->{
-            openMenuSuperior("Editar Perfil");
+            openMenuSuperior();
             bottomSheetDialog.dismiss();
         });
 
@@ -269,19 +231,11 @@ public class MisLabores extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(MisLabores.this);
             builder.setMessage(R.string.preguntaUsuario);
 
-            builder.setPositiveButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+            builder.setPositiveButton(R.string.Cancelar, (dialogInterface, i) -> {
 
-                }
             });
 
-            builder.setNegativeButton(R.string.salirConfirmar, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    cerrarSesionYSalir();
-                }
-            });
+            builder.setNegativeButton(R.string.salirConfirmar, (dialogInterface, i) -> cerrarSesionYSalir());
 
             builder.show();
         });
@@ -304,13 +258,13 @@ public class MisLabores extends AppCompatActivity {
         finishAffinity();  // Cierra todas las actividades y sale de la app
     }
 
-    private void openMenuSuperior(String tipo) {
+    private void openMenuSuperior() {
         Intent intent = new Intent(this, MenuSuperior.class);
-        intent.putExtra("tipo", tipo);
+        intent.putExtra("tipo", "Editar Perfil");
         startActivity(intent);
     }
 
-    class FakeMenuItem implements MenuItem {
+    static class FakeMenuItem implements MenuItem {
         private final int id;
 
         public FakeMenuItem(int id) {
