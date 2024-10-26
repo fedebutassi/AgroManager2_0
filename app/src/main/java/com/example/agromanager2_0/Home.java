@@ -68,10 +68,12 @@ public class Home extends AppCompatActivity {
 
         ImageButton avatarMiPerfil = findViewById(R.id.avatar_button);
         avatarMiPerfil.setOnClickListener(view3 -> irAMiPerfil());
-        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
-        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
+
         @SuppressLint("CutPasteId") FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setContentDescription("Añadir nuevo elemento");
+
+        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
+        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
 
         ImageButton imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(view -> accesoACultivos());
@@ -184,7 +186,6 @@ public class Home extends AppCompatActivity {
         switch (pantalla) {
             case "Lotes":
                 intent = new Intent(this, NuevoLoteActivity.class);
-                // En lugar de startActivityForResult, usamos el launcher registrado
                 loteActivityLauncher.launch(intent);
                 break;
             case "Labores":
@@ -208,14 +209,8 @@ public class Home extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Indica que se creo un lote
     }
 
-
-    /*Implementacion de menu desplegable con botones
-    *   "Configuracion"
-    *   "Editar perfil"
-    *   "Cerrar sesion"*/
     private void showBottomSheetDialog2(){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         @SuppressLint("InflateParams") View bottomSheetView = LayoutInflater.from(getApplicationContext())

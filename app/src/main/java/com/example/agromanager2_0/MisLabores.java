@@ -81,6 +81,9 @@ public class MisLabores extends AppCompatActivity {
         ImageButton imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(view -> accesoACultivos());
 
+        ImageButton imageButton3 = findViewById(R.id.imageButton3);
+        imageButton3.setOnClickListener(view -> accesoAAplicaciones());
+
     }
 
     @Override
@@ -116,6 +119,20 @@ public class MisLabores extends AppCompatActivity {
 
     public void irAMiPerfil(){
         Intent intent = new Intent(this, MiPerfil.class);
+        startActivity(intent);
+    }
+
+    public void accesoALotes(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
+    public void accesoACultivos(){
+        Intent intent = new Intent(this, MisCultivos.class);
+        startActivity(intent);
+    }
+
+    public void accesoAAplicaciones(){
+        Intent intent = new Intent(this, MisAplicaciones.class);
         startActivity(intent);
     }
 
@@ -197,7 +214,7 @@ public class MisLabores extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Indica que se creo un lote
+
     }
 
 
@@ -489,12 +506,5 @@ public class MisLabores extends AppCompatActivity {
         // ... otros métodos omitidos por simplicidad
     }
 
-    public void accesoALotes(){
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
-    }
-    public void accesoACultivos(){
-        Intent intent = new Intent(this, MisCultivos.class);
-        startActivity(intent);
-    }
+
 }

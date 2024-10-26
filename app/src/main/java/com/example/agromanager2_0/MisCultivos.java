@@ -69,13 +69,18 @@ public class MisCultivos extends AppCompatActivity {
 
         ImageButton avatarMiPerfil = findViewById(R.id.avatar_button);
         avatarMiPerfil.setOnClickListener(view3 -> irAMiPerfil());
-        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
-        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
+
         @SuppressLint("CutPasteId") FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setContentDescription("Añadir nuevo elemento");
 
         ImageButton imageButton4 = findViewById(R.id.imageButton4);
         imageButton4.setOnClickListener(view4 -> accesoALotes());
+
+        ImageButton imageButton3 = findViewById(R.id.imageButton3);
+        imageButton3.setOnClickListener(view -> accesoAAplicaciones());
+
+        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
+        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
     }
 
     @Override
@@ -108,11 +113,21 @@ public class MisCultivos extends AppCompatActivity {
         }
     }
 
+    public void accesoALotes(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
 
     public void irAMisLabores(){
         Intent intent = new Intent(this, MisLabores.class);
         startActivity(intent);
     }
+
+    public void accesoAAplicaciones(){
+        Intent intent = new Intent(this, MisAplicaciones.class);
+        startActivity(intent);
+    }
+
 
 
     public void irAMiPerfil(){
@@ -488,8 +503,5 @@ public class MisCultivos extends AppCompatActivity {
         @Override
         public boolean isVisible() { return false; }
     }
-    public void accesoALotes(){
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
-    }
+
 }

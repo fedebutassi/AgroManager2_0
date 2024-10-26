@@ -80,6 +80,9 @@ public class MisAplicaciones extends AppCompatActivity {
         ImageButton imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(view -> accesoACultivos());
 
+        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
+        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
+
     }
 
     @Override
@@ -119,6 +122,20 @@ public class MisAplicaciones extends AppCompatActivity {
     }
 
 
+
+    public void accesoALotes(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
+    public void accesoACultivos(){
+        Intent intent = new Intent(this, MisCultivos.class);
+        startActivity(intent);
+    }
+
+    public void irAMisLabores(){
+        Intent intent = new Intent(this, MisLabores.class);
+        startActivity(intent);
+    }
 
     public void irAMiPerfil(){
         Intent intent = new Intent(this, MiPerfil.class);
@@ -487,12 +504,5 @@ public class MisAplicaciones extends AppCompatActivity {
         // ... otros métodos omitidos por simplicidad
     }
 
-    public void accesoALotes(){
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
-    }
-    public void accesoACultivos(){
-        Intent intent = new Intent(this, MisCultivos.class);
-        startActivity(intent);
-    }
+
 }
