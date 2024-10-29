@@ -86,7 +86,7 @@ public class AplicacionActivity extends AppCompatActivity {
 
 
         // Configura el adaptador con la lista de labores
-        aplicacionAdapter = new AplicacionAdapter(listaAplicaciones);
+        aplicacionAdapter = new AplicacionAdapter((ArrayList<Aplicacion>) listaAplicaciones);
         recyclerView.setAdapter(aplicacionAdapter);
 
         fechaButton.setOnClickListener(v -> mostrarDatePicker());

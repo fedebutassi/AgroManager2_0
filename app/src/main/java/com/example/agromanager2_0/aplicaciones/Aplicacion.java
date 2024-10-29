@@ -35,4 +35,8 @@ public class Aplicacion {
     public String getLote() {
         return null;
     }
+
+    public int getId() {
+        return Integer.parseInt(null);
+    }
 }

@@ -158,7 +158,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/mis_aplicaciones"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -170,7 +170,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_viewAplicacionesHome"
         android:layout_width="409dp"
-        android:layout_height="521dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/signomas"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         app:layout_constraintVertical_bias="1.0"

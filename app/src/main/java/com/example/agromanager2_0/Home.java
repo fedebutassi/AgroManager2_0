@@ -146,7 +146,7 @@ public class Home extends AppCompatActivity {
         });
 
         bottomSheetView.findViewById(R.id.nuevaLabor).setOnClickListener(v -> {
-            MenuItem fakeItem = new FakeMenuItem(R.id.menu_nueva_labor);
+            MenuItem fakeItem = new FakeMenuItem(R.id.menu_nueva_labor) ;
             onMenuItemClick(fakeItem);
             bottomSheetDialog.dismiss();
         });

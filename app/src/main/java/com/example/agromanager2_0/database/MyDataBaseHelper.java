@@ -224,5 +224,4 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         return listaLotes;
     }
 
-
 }

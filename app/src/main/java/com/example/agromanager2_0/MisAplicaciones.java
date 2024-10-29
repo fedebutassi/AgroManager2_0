@@ -80,9 +80,6 @@ public class MisAplicaciones extends AppCompatActivity {
         ImageButton imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(view -> accesoACultivos());
 
-        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
-        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
-
     }
 
     @Override
@@ -96,10 +93,8 @@ public class MisAplicaciones extends AppCompatActivity {
         listaAplicaciones.clear();
         try (Cursor cursor = miDb.obtenerAplicaciones()) {
             if (cursor != null && cursor.getCount() > 0) {
-                logColumnasCursor(cursor);
 
                 while (cursor.moveToNext()) {
-                    logColumnasCursor(cursor);
                     String nombreAplicacion = cursor.getString(1);
                     String fechaAplicacion = cursor.getString(3);
                     String areaCubierta = cursor.getString(5);
@@ -108,34 +103,15 @@ public class MisAplicaciones extends AppCompatActivity {
                     listaAplicaciones.add(aplicacion);
                 }
                 aplicacionAdapter.notifyDataSetChanged();
-            } else {
-                Log.e("Cursor Error", "No se encontraron labores.");
+            }
+            if (cursor != null) {
+                cursor.close(); // Cierra el cursor para evitar fugas de memoria
             }
         }
-        // Asegurarse de cerrar el cursor
-    }
-    private void logColumnasCursor(Cursor cursor) {
-        String[] columnNames = cursor.getColumnNames();
-        for (int i = 0; i < columnNames.length; i++) {
-            Log.d("Cursor Column Info", "Posición: " + i + ", Nombre: " + columnNames[i]);
-        }
     }
 
 
 
-    public void accesoALotes(){
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
-    }
-    public void accesoACultivos(){
-        Intent intent = new Intent(this, MisCultivos.class);
-        startActivity(intent);
-    }
-
-    public void irAMisLabores(){
-        Intent intent = new Intent(this, MisLabores.class);
-        startActivity(intent);
-    }
 
     public void irAMiPerfil(){
         Intent intent = new Intent(this, MiPerfil.class);
@@ -504,5 +480,12 @@ public class MisAplicaciones extends AppCompatActivity {
         // ... otros métodos omitidos por simplicidad
     }
 
-
+    public void accesoALotes(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
+    public void accesoACultivos(){
+        Intent intent = new Intent(this, MisCultivos.class);
+        startActivity(intent);
+    }
 }
