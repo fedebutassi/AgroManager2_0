@@ -1,19 +1,20 @@
 package com.example.agromanager2_0.lotes;
 
-//**representacion de un lote**//
 
 import com.google.android.gms.maps.model.LatLng;
 
 public class Lote {
     private String nombre;
-    private String superficie;
-    private LatLng ubicacion; // Añadir la ubicación
+    private double hectareas;
+    private LatLng ubicacion;
 
-
-    public Lote(String nombre, String superficie, LatLng ubicacion) {
+    public Lote(String nombre, double hectareas, LatLng ubicacion) {
         this.nombre = nombre;
-        this.superficie = superficie;
+        this.hectareas = hectareas;
         this.ubicacion = ubicacion;
+    }
+
+    public Lote() {
     }
 
 
@@ -21,8 +22,8 @@ public class Lote {
         return nombre;
     }
 
-    public String getSuperficie() {
-        return superficie;
+    public double getHectareas() {
+        return hectareas;
     }
 
     public LatLng getUbicacion() {

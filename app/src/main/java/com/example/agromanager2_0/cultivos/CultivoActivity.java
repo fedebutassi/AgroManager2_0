@@ -3,14 +3,8 @@ package com.example.agromanager2_0.cultivos;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,25 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.agromanager2_0.R;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.lotes.Lote;
-import com.example.agromanager2_0.lotes.LoteStorage;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class CultivoActivity extends AppCompatActivity {
 
     private EditText editTextCultivo, editTextDescripcionCultivo; // Sin cambios
     private EditText editTextAreaCubiertaPorCultivo; // Sin cambios
     private Spinner spinnerLotes; // Sin cambios
-    private Button fechaButton, guardarButton; // Sin cambios
-    private RecyclerView recyclerViewCultivos; // Sin cambios
+    private Button fechaButton;
     private CultivoAdapter cultivoAdapter; // Sin cambios
-    private List<Cultivo> listaCultivos; // Sin cambios
-    private String fechaSeleccionada = ""; // Sin cambios
+    private static List<Cultivo> listaCultivos = new ArrayList<>();    private String fechaSeleccionada = ""; // Sin cambios
 
     MyDataBaseHelper miDb;
-    // Button buttonSeleccionarFechaCultivo, buttonGuardarCultivo; // Eliminada: innecesaria, ya hay referencias a fechaButton y guardarButton
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -52,7 +40,7 @@ public class CultivoActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Cultivos");
 
         editTextCultivo = findViewById(R.id.editTextCultivo);
@@ -60,27 +48,30 @@ public class CultivoActivity extends AppCompatActivity {
         spinnerLotes = findViewById(R.id.spinnerLotes);
         editTextAreaCubiertaPorCultivo = findViewById(R.id.editTextAreaCubiertaPorCultivo);
         fechaButton = findViewById(R.id.buttonSeleccionarFechaCultivo);
-        guardarButton = findViewById(R.id.buttonGuardarCultivo);
+        // Sin cambios
+        Button guardarButton = findViewById(R.id.buttonGuardarCultivo);
 
-        recyclerViewCultivos = findViewById(R.id.recyclerViewCultivos);
+        // Sin cambios
+        RecyclerView recyclerViewCultivos = findViewById(R.id.recyclerViewCultivos);
         recyclerViewCultivos.setLayoutManager(new LinearLayoutManager(this)); // Inicialización movida al principio
 
+        List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
         List<String> nombresLotes = new ArrayList<>();
-        for (Lote lote : LoteStorage.getLotes()) {
-            nombresLotes.add(lote.getNombre());
+        for (Lote lote : lotesDesdeDb) {
+            if (lote != null && lote.getNombre() != null) {  // Verifica que lote y nombre no sean nulos
+                nombresLotes.add(lote.getNombre());
+            }
         }
 
-        // Log para comprobar cuántos lotes se están cargando
-        Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size()); // Cambiado el nombre del log
+        if (nombresLotes.isEmpty()) {
+            Toast.makeText(this, "No hay lotes disponibles.", Toast.LENGTH_SHORT).show();
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerLotes.setAdapter(adapter);
+        }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLotes.setAdapter(adapter);
-
-        // Inicializar la lista de cultivos una sola vez
-        listaCultivos = CultivoStorage.getCultivos(); // Cambio para cargar cultivos desde el almacenamiento
-
-        // Inicializa el RecyclerView y el adaptador
+        listaCultivos = CultivoStorage.getCultivos();
         cultivoAdapter = new CultivoAdapter(listaCultivos);
         recyclerViewCultivos.setAdapter(cultivoAdapter);
 
@@ -89,7 +80,7 @@ public class CultivoActivity extends AppCompatActivity {
         guardarButton.setOnClickListener(view -> {
             String nombreCultivo = editTextCultivo.getText().toString(); // Variable renombrada para claridad
             String descripcionCultivo = editTextDescripcionCultivo.getText().toString();
-            int areaCubiertaPorCultivo = Integer.parseInt(editTextAreaCubiertaPorCultivo.getText().toString());
+            String areaCubiertaPorCultivo = editTextAreaCubiertaPorCultivo.getText().toString();
             if (spinnerLotes.getSelectedItem() != null) {
                 String loteSeleccionado = spinnerLotes.getSelectedItem().toString();
 
@@ -104,27 +95,17 @@ public class CultivoActivity extends AppCompatActivity {
                     }
 
                     if (!existeCultivo) {
-                        // Crear nueva labor
-                        Cultivo nuevoCultivo = new Cultivo(nombreCultivo, fechaSeleccionada, loteSeleccionado, areaCubiertaPorCultivo, descripcionCultivo);
+                        Cultivo nuevoCultivo = new Cultivo(nombreCultivo, fechaSeleccionada,  areaCubiertaPorCultivo, descripcionCultivo);
 
-                        boolean insertadoExitosamente = miDb.insertarDatosCultivos(nombreCultivo, areaCubiertaPorCultivo, fechaSeleccionada, descripcionCultivo);
+                        boolean isInserted = miDb.insertarDatosCultivos(nombreCultivo, fechaSeleccionada,  areaCubiertaPorCultivo, descripcionCultivo);
 
 
-                        if (insertadoExitosamente) {
-                            // Agregar a la lista temporal de CultivoStorage
-                            CultivoStorage.addCultivo(nuevoCultivo);
+                        if (isInserted) {
 
-                            // Agregar directamente a la lista temporal
                             listaCultivos.add(nuevoCultivo);
 
-                            // Verificación mediante Log
-                            Log.d("CultivoActivity", "Cultivo guardado: " + nuevoCultivo.getCultivo());
-                            Log.d("CultivoActivity", "Cantidad de cultivos guardados: " + listaCultivos.size());
-
-                            // Notificar al adaptador que los datos han cambiado
                             cultivoAdapter.notifyDataSetChanged();
 
-                            // Limpiar los campos después de guardar
                             limpiarLotes();
 
                             Toast.makeText(this, "Cultivo guardado exitosamente en la base de datos", Toast.LENGTH_SHORT).show();
@@ -168,10 +149,12 @@ public class CultivoActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
+    @SuppressLint("SetTextI18n")
     private void limpiarLotes() { // Nuevo método para limpiar los campos
         editTextCultivo.setText("");
         editTextDescripcionCultivo.setText("");
         spinnerLotes.setSelection(0);
+        editTextAreaCubiertaPorCultivo.setText("");
         fechaButton.setText("Seleccionar Fecha");
         fechaSeleccionada = "";
     }
@@ -180,5 +163,6 @@ public class CultivoActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
     }
+
 
 }

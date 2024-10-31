@@ -5,9 +5,9 @@ import android.content.*;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
-
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -17,30 +17,32 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.agromanager2_0.lotes.*;
+
+import com.example.agromanager2_0.aplicaciones.*;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
 import com.example.agromanager2_0.cultivos.CultivoActivity;
 import com.example.agromanager2_0.labores.LaboresActivity;
+import com.example.agromanager2_0.lotes.NuevoLoteActivity;
 import com.example.agromanager2_0.settings.SettingsActivity;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.app.Activity;
 
-import java.util.ArrayList;
+import java.util.*;
 
-public class Home extends AppCompatActivity {
-    private LoteAdapter loteAdapter;
-    private final ArrayList<Lote> listaLotes = new ArrayList<>();
+public class MisAplicaciones extends AppCompatActivity {
+
+    private final ArrayList<Aplicacion> listaAplicaciones = new ArrayList<>();
     private MyDataBaseHelper miDb;
     private ActivityResultLauncher<Intent> loteActivityLauncher;
+    private AplicacionAdapter aplicacionAdapter; // Asegúrate de que el adaptador está correctamente definido
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_mis_aplicaciones   );
 
         miDb = new MyDataBaseHelper(this);
 
@@ -48,19 +50,19 @@ public class Home extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        cargarLotes(); // Carga los lotes al volver
+                        cargarAplicaciones();
                     }
                 }
         );
-        RecyclerView recyclerViewLotes = findViewById(R.id.recycler_viewLotesHome);
-        recyclerViewLotes.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerViewLabores = findViewById(R.id.recycler_viewAplicacionesHome);
+        recyclerViewLabores.setLayoutManager(new LinearLayoutManager(this));
 
-        loteAdapter = new LoteAdapter(listaLotes);
-        recyclerViewLotes.setAdapter(loteAdapter);
+        aplicacionAdapter = new AplicacionAdapter(listaAplicaciones);
+        recyclerViewLabores.setAdapter(aplicacionAdapter);
 
-        cargarLotes(); // Carga los lotes inicialmente
+        cargarAplicaciones(); // Carga los lotes inicialmente
 
-        @SuppressLint("CutPasteId") ImageButton imageButton5 = findViewById(R.id.signomas);
+        ImageButton imageButton5 = findViewById(R.id.signomas);
         imageButton5.setOnClickListener(v -> showBottomSheetDialog());
 
         ImageButton buttonMenuSuperior = findViewById(R.id.menu_button);
@@ -72,63 +74,47 @@ public class Home extends AppCompatActivity {
         @SuppressLint("CutPasteId") FloatingActionButton fab = findViewById(R.id.signomas);
         fab.setContentDescription("Añadir nuevo elemento");
 
-        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
-        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
+        ImageButton imageButton4 = findViewById(R.id.imageButton4);
+        imageButton4.setOnClickListener(view4 -> accesoALotes());
 
         ImageButton imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(view -> accesoACultivos());
 
-        ImageButton imageButton3 = findViewById(R.id.imageButton3);
-        imageButton3.setOnClickListener(view -> accesoAAplicaciones());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cargarLotes(); // Carga los lotes cada vez que se reanuda la actividad
+        cargarAplicaciones(); // Carga los lotes cada vez que se reanuda la actividad
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void cargarLotes() {
-        listaLotes.clear(); // Limpia la lista antes de cargar
-        Cursor cursor = miDb.obtenerLotes();
-        if (cursor != null && cursor.getCount() > 0) {
-            while (cursor.moveToNext()) {
-                String nombreLote = cursor.getString(1);
-                double hectareas = cursor.getDouble(2);
-                double latitud = cursor.getDouble(3);
-                double longitud = cursor.getDouble(4);
-                LatLng ubicacion = new LatLng(latitud, longitud);
+    private void cargarAplicaciones() {
+        listaAplicaciones.clear();
+        try (Cursor cursor = miDb.obtenerAplicaciones()) {
+            if (cursor != null && cursor.getCount() > 0) {
 
-                Lote lote = new Lote(nombreLote, hectareas, ubicacion);
-                listaLotes.add(lote);
+                while (cursor.moveToNext()) {
+                    String nombreAplicacion = cursor.getString(1);
+                    String fechaAplicacion = cursor.getString(3);
+                    String areaCubierta = cursor.getString(5);
+                    String descripcionAplicacion = cursor.getString(6);
+                    Aplicacion aplicacion = new Aplicacion(nombreAplicacion, fechaAplicacion, areaCubierta, descripcionAplicacion);
+                    listaAplicaciones.add(aplicacion);
+                }
+                aplicacionAdapter.notifyDataSetChanged();
             }
-            loteAdapter.notifyDataSetChanged(); // Notifica al adaptador que los datos han cambiado
-        }
-        if (cursor != null) {
-            cursor.close(); // Cierra el cursor para evitar fugas de memoria
+            if (cursor != null) {
+                cursor.close(); // Cierra el cursor para evitar fugas de memoria
+            }
         }
     }
 
 
-    public void irAMisLabores(){
-        Intent intent = new Intent(this, MisLabores.class);
-        startActivity(intent);
-    }
 
 
     public void irAMiPerfil(){
         Intent intent = new Intent(this, MiPerfil.class);
-        startActivity(intent);
-    }
-
-    public void accesoACultivos(){
-        Intent intent = new Intent(this, MisCultivos.class);
-        startActivity(intent);
-    }
-
-    public void accesoAAplicaciones(){
-        Intent intent = new Intent(this, MisAplicaciones.class);
         startActivity(intent);
     }
 
@@ -146,7 +132,7 @@ public class Home extends AppCompatActivity {
         });
 
         bottomSheetView.findViewById(R.id.nuevaLabor).setOnClickListener(v -> {
-            MenuItem fakeItem = new FakeMenuItem(R.id.menu_nueva_labor) ;
+            MenuItem fakeItem = new FakeMenuItem(R.id.menu_nueva_labor);
             onMenuItemClick(fakeItem);
             bottomSheetDialog.dismiss();
         });
@@ -180,12 +166,12 @@ public class Home extends AppCompatActivity {
         }
     }
 
-    // Método para abrir la pantalla correspondiente
     private void abrirNuevaPantalla(String pantalla) {
         Intent intent;
         switch (pantalla) {
             case "Lotes":
                 intent = new Intent(this, NuevoLoteActivity.class);
+                // En lugar de startActivityForResult, usamos el launcher registrado
                 loteActivityLauncher.launch(intent);
                 break;
             case "Labores":
@@ -211,14 +197,15 @@ public class Home extends AppCompatActivity {
 
     }
 
+
     private void showBottomSheetDialog2(){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-        @SuppressLint("InflateParams") View bottomSheetView = LayoutInflater.from(getApplicationContext())
+        View bottomSheetView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.menusuperior, null);
         bottomSheetDialog.setContentView(bottomSheetView);
 
         bottomSheetView.findViewById(R.id.configuracion).setOnClickListener(v ->{
-            // Crear un intent para abrir la actividad de configuración
+
             Intent intent = new Intent(v.getContext(), SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             v.getContext().startActivity(intent);
@@ -234,7 +221,7 @@ public class Home extends AppCompatActivity {
 
         bottomSheetView.findViewById(R.id.cerrarSesion).setOnClickListener(v ->{
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MisAplicaciones.this);
             builder.setMessage(R.string.preguntaUsuario);
 
             builder.setPositiveButton(R.string.Cancelar, (dialogInterface, i) -> {
@@ -251,17 +238,15 @@ public class Home extends AppCompatActivity {
     }
 
     private void cerrarSesionYSalir() {
-        // Eliminar los datos de sesión (por ejemplo, en SharedPreferences)
+
         SharedPreferences sharedPreferences = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();  // Limpiar todos los datos de sesión
+        editor.clear();
         editor.apply();
 
-        // Mostrar un mensaje que la sesión se ha cerrado
-        Toast.makeText(Home.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MisAplicaciones.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
 
-        // Finalizar todas las actividades y salir de la aplicación
-        finishAffinity();  // Cierra todas las actividades y sale de la app
+        finishAffinity();
     }
 
     private void openMenuSuperior() {
@@ -495,5 +480,12 @@ public class Home extends AppCompatActivity {
         // ... otros métodos omitidos por simplicidad
     }
 
-
+    public void accesoALotes(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
+    public void accesoACultivos(){
+        Intent intent = new Intent(this, MisCultivos.class);
+        startActivity(intent);
+    }
 }

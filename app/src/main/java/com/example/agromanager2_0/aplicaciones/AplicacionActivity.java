@@ -5,39 +5,24 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.agromanager2_0.R;
 import com.example.agromanager2_0.database.MyDataBaseHelper;
-import com.example.agromanager2_0.labores.Labor;
-import com.example.agromanager2_0.labores.LaborAdapter;
-import com.example.agromanager2_0.labores.LaborStorage;
 import com.example.agromanager2_0.lotes.Lote;
-import com.example.agromanager2_0.lotes.LoteStorage;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 public class AplicacionActivity extends AppCompatActivity {
 
     private EditText editTextNombreAplicacion, editTextDescripcionAplicacion;
     private EditText editTextAreaCubierta;
     private Spinner spinnerLotes;
-    private Button fechaButton, guardarButton;
-    private RecyclerView recyclerViewAplicaciones;
+    private Button fechaButton;
     private AplicacionAdapter aplicacionAdapter;
     private List<Aplicacion> listaAplicaciones;
     private String fechaSeleccionada = "";
@@ -56,7 +41,7 @@ public class AplicacionActivity extends AppCompatActivity {
         // Habilitar el botón atrás en la ActionBar
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Aplicaciones");
 
         // Inicializar vistas
@@ -65,28 +50,35 @@ public class AplicacionActivity extends AppCompatActivity {
         spinnerLotes = findViewById(R.id.spinnerLotes);
         editTextAreaCubierta = findViewById(R.id.editTextAreaCubierta);
         fechaButton = findViewById(R.id.buttonSeleccionarFechaAplicacion);
-        guardarButton = findViewById(R.id.buttonGuardarAplicacion);
+        Button guardarButton = findViewById(R.id.buttonGuardarAplicacion);
 
-        recyclerViewAplicaciones = findViewById(R.id.recyclerViewAplicaciones);
+        findViewById(R.id.recyclerViewAplicaciones);
 
+        List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
         List<String> nombresLotes = new ArrayList<>();
-        for (Lote lote : LoteStorage.getLotes()) {
-            nombresLotes.add(lote.getNombre());
+        for (Lote lote : lotesDesdeDb) {
+            if (lote != null && lote.getNombre() != null) {  // Verifica que lote y nombre no sean nulos
+                nombresLotes.add(lote.getNombre());
+            }
         }
 
-        // Log para comprobar cuántos lotes se están cargando
-        Log.d("AplicacionActivity", "Lotes disponibles: " + nombresLotes.size());
+        if (nombresLotes.isEmpty()) {
+            Log.d("CultivoActivity", "No se encontraron lotes en la base de datos.");
+            Toast.makeText(this, "No hay lotes disponibles.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size());
 
-        // Adaptador para el Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLotes.setAdapter(adapter);
+            // Configura el ArrayAdapter y asigna al Spinner
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerLotes.setAdapter(adapter);
+        }
 
         // Inicializar la lista de labores una sola vez
         listaAplicaciones = AplicacionStorage.getAplicacion();
 
         // Inicializa el RecyclerView y el adaptador en onCreate o similar
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewAplicaciones);
+        @SuppressLint("CutPasteId") RecyclerView recyclerView = findViewById(R.id.recyclerViewAplicaciones);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Inicializa la lista de labores desde LaborStorage
@@ -94,7 +86,7 @@ public class AplicacionActivity extends AppCompatActivity {
 
 
         // Configura el adaptador con la lista de labores
-        aplicacionAdapter = new AplicacionAdapter(listaAplicaciones);
+        aplicacionAdapter = new AplicacionAdapter((ArrayList<Aplicacion>) listaAplicaciones);
         recyclerView.setAdapter(aplicacionAdapter);
 
         fechaButton.setOnClickListener(v -> mostrarDatePicker());
@@ -118,7 +110,7 @@ public class AplicacionActivity extends AppCompatActivity {
 
                     if (!existeAplicacion) {
                         // Crear nueva labor
-                        Aplicacion nuevaAplicacion = new Aplicacion(nombreAplicacion, fechaSeleccionada, loteSeleccionado, areaCubierta,descripcionAplicacion);
+                        Aplicacion nuevaAplicacion = new Aplicacion(nombreAplicacion, fechaSeleccionada, areaCubierta,descripcionAplicacion);
 
                         boolean isInserted = miDb.insertarDatosAplicaciones(
                                 nombreAplicacion,                // nombre_producto
@@ -139,7 +131,7 @@ public class AplicacionActivity extends AppCompatActivity {
                             aplicacionAdapter.notifyDataSetChanged();
 
                             // Limpiar los campos después de guardar
-                            limpiarLotes();
+                            limpiarAplicacion();
 
                             Toast.makeText(this, "Aplicacion guardada exitosamente", Toast.LENGTH_SHORT).show();
                         } else {
@@ -183,12 +175,14 @@ public class AplicacionActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
-    private void limpiarLotes() {
+    @SuppressLint("SetTextI18n")
+    private void limpiarAplicacion() {
         editTextNombreAplicacion.setText("");
         editTextDescripcionAplicacion.setText("");
         spinnerLotes.setSelection(0);
         fechaButton.setText("Seleccionar Fecha");
         fechaSeleccionada = "";
+        editTextAreaCubierta.setText("");
     }
 
     @Override

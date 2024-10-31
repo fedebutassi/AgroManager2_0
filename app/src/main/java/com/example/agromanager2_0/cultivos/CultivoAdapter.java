@@ -1,21 +1,16 @@
 package com.example.agromanager2_0.cultivos;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.annotation.SuppressLint;
+import android.view.*;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.agromanager2_0.R;
-import com.example.agromanager2_0.cultivos.CultivoAdapter;
-
-import java.util.List;
+import java.util.*;
 
 public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoViewHolder>{
 
-    private List<Cultivo> cultivos;
+    private final List<Cultivo> cultivos;
 
     public CultivoAdapter(List<Cultivo> cultivos) {
         this.cultivos = cultivos;
@@ -28,12 +23,13 @@ public class CultivoAdapter extends RecyclerView.Adapter<CultivoAdapter.CultivoV
         return new CultivoAdapter.CultivoViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CultivoAdapter.CultivoViewHolder holder, int position) {
         Cultivo cultivo = cultivos.get(position);
         holder.Cultivo.setText(cultivo.getCultivo());
         holder.fechaCultivo.setText("Fecha: " + cultivo.getFechaCultivo());
-        holder.loteAsociado.setText("Lote: " + cultivo.getLote());
+        holder.loteAsociado.setText("Lote: " + cultivo.getLoteCultivo());
         holder.areaCubiertaPorCultivo.setText("Area cubierta (has): " + cultivo.getAreaCubiertaPorCultivo());
         holder.descripcioCultivo.setText("Descripción: " + cultivo.getDescripcionCultivo());
     }

@@ -5,11 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -24,13 +20,10 @@ public class SplashActivity extends AppCompatActivity {
         int tiempoEspera = 3000; // 3 segundos
 
         // Usamos un Handler para esperar el tiempo y luego iniciar MainActivity
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish(); // Cierra SplashActivity
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Cierra SplashActivity
         }, tiempoEspera);
     }
 }

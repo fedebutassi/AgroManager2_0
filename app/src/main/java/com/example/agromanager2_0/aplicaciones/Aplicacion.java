@@ -2,18 +2,15 @@ package com.example.agromanager2_0.aplicaciones;
 
 public class Aplicacion {
 
-    //Declaracion de variables
+    private final String nombreAplicacion;
+    private final String fechaAplicacion;
 
-    private String nombreAplicacion;
-    private String fechaAplicacion;
-    private String lote;
-    private String areaCubierta;
-    private String descripcionAplicacacion;
+    private final String areaCubierta;
+    private final String descripcionAplicacacion;
 
-    public Aplicacion(String nombreAplicacion, String fechaAplicacion, String lote, String areaCubierta, String descripcionAplicacacion) {
+    public Aplicacion(String nombreAplicacion, String fechaAplicacion, String areaCubierta, String descripcionAplicacacion) {
         this.nombreAplicacion = nombreAplicacion;
         this.fechaAplicacion = fechaAplicacion;
-        this.lote = lote;
         this.areaCubierta = areaCubierta;
         this.descripcionAplicacacion = descripcionAplicacacion;
     }
@@ -26,9 +23,6 @@ public class Aplicacion {
         return fechaAplicacion;
     }
 
-    public String getLote() {
-        return lote;
-    }
 
     public String getAreaCubierta(){
         return areaCubierta;
@@ -36,5 +30,13 @@ public class Aplicacion {
 
     public String getDescripcionAplicacacion() {
         return descripcionAplicacacion;
+    }
+
+    public String getLote() {
+        return null;
+    }
+
+    public int getId() {
+        return Integer.parseInt(null);
     }
 }

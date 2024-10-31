@@ -2,8 +2,9 @@ package com.example.agromanager2_0;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,8 +12,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.agromanager2_0.database.MyDataBaseHelper;
 
+public class MainActivity extends AppCompatActivity {
+    private MyDataBaseHelper miDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,32 +27,40 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        miDb = new MyDataBaseHelper(this); // Inicializa tu base de datos
+
+        EditText editTextEmail = findViewById(R.id.email);
+        EditText editTextPassword = findViewById(R.id.password);
         Button botonIngresar = findViewById(R.id.botonIngresar);
-
-        botonIngresar.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                irAPantallaInicio();
-            }
-        });
-
         Button botonRegistro = findViewById(R.id.botonRegistrarse);
-
-        botonRegistro.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-               irARegistro();
-            }
-        });
-
         Button botonForgotPassword = findViewById(R.id.olvidasteContra);
 
-        botonForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                irAOlvidoPassword();
+
+        botonIngresar.setOnClickListener(v -> {
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
+
+            if (!email.isEmpty() && !password.isEmpty()) {
+
+                boolean isValid = miDb.validarUsuario(email, password);
+
+                if (isValid) {
+                    Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this, Home.class); // Cambia Home por tu actividad principal
+                    startActivity(intent);
+                    finish(); // Opcional: cerrar la actividad actual
+                } else {
+                    Toast.makeText(MainActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(MainActivity.this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
             }
         });
+
+        botonRegistro.setOnClickListener(v -> irARegistro());
+
+        botonForgotPassword.setOnClickListener(view -> irAOlvidoPassword());
 
 
     }

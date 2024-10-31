@@ -158,18 +158,16 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/mis_lotes"
+        android:layout_marginTop="20dp"
+        android:text="@string/mis_labores"
         android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="140dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_viewLotesHome"
+        android:id="@+id/recycler_viewLaboresHome"
         android:layout_width="409dp"
         android:layout_height="521dp"
         app:layout_constraintBottom_toTopOf="@+id/signomas"

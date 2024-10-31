@@ -1,27 +1,22 @@
 package com.example.agromanager2_0.lotes;
 
-//**muestra los datos de los lotes en un RecyclerView**//
 
-
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agromanager2_0.R;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.List;
+import java.util.*;
 
 public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder> {
 
-    private List<Lote> lotes;
+    private final List<Lote> lotes;
 
     public LoteAdapter(List<Lote> lotes) {
         this.lotes = lotes;
@@ -34,12 +29,13 @@ public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder
         return new LoteViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull LoteViewHolder holder, int position) {
         Lote lote = lotes.get(position);
 
         holder.nombreLote.setText(lote.getNombre());
-        holder.superficieLote.setText("Superficie: " + lote.getSuperficie());
+        holder.superficieLote.setText("Superficie: " + lote.getHectareas() +" has.");
 
         // Mostrar ubicación en el botón Ver en Google Maps
         if (lote.getUbicacion() != null) {
@@ -76,6 +72,9 @@ public class LoteAdapter extends RecyclerView.Adapter<LoteAdapter.LoteViewHolder
             nombreLote = itemView.findViewById(R.id.nombre_lote);
             superficieLote = itemView.findViewById(R.id.superficie_lote);
             verMapaButton = itemView.findViewById(R.id.ver_mapa_button);
+            itemView.setOnClickListener(view -> {
+
+            });
         }
     }
 
