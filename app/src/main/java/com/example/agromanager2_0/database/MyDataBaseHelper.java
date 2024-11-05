@@ -224,4 +224,19 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         return listaLotes;
     }
 
+    public boolean actualizarDatosUsuario(String email, String nombre, String apellido, String fechaNacimiento, String localidad, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("nombre", nombre);
+        contentValues.put("apellido", apellido);
+        contentValues.put("fecha_nacimiento", fechaNacimiento);
+        contentValues.put("localidad", localidad);
+        contentValues.put("password", password);
+
+        // Devuelve el número de filas afectadas por la actualización
+        int result = db.update(TABLE_USUARIOS, contentValues, "email = ?", new String[]{email});
+        return result > 0; // Retorna true si al menos una fila fue actualizada
+    }
+
 }

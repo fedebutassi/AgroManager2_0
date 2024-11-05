@@ -1,6 +1,7 @@
 package com.example.agromanager2_0;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,12 +46,20 @@ public class MainActivity extends AppCompatActivity {
                 boolean isValid = miDb.validarUsuario(email, password);
 
                 if (isValid) {
+                    // Guarda el email en SharedPreferences
+                    SharedPreferences sharedPreferences = getSharedPreferences("userSession", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("emailUsuario", email);
+                    editor.apply();
+
                     Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(MainActivity.this, Home.class); // Cambia Home por tu actividad principal
+                    Intent intent = new Intent(MainActivity.this, Home.class);
                     startActivity(intent);
-                    finish(); // Opcional: cerrar la actividad actual
-                } else {
+                    finish();
+                }
+
+                else {
                     Toast.makeText(MainActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                 }
             } else {

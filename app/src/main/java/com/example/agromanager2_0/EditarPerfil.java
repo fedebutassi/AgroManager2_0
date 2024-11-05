@@ -1,26 +1,31 @@
 package com.example.agromanager2_0;
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.SharedPreferences;
+import com.example.agromanager2_0.database.MyDataBaseHelper;
 
 public class EditarPerfil extends AppCompatActivity {
     private EditText editTextNombre, editTextApellido, editTextCorreo, editTextContrasena;
     private Button buttonGuardar;
+    private MyDataBaseHelper myDataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_perfil);
 
+        // Inicializar los campos de texto
         editTextNombre = findViewById(R.id.editTextNombre);
         editTextApellido = findViewById(R.id.editTextApellido);
         editTextCorreo = findViewById(R.id.editTextCorreo);
@@ -33,15 +38,67 @@ public class EditarPerfil extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Editar Perfil");
 
-        // Cargar datos del perfil desde SharedPreferences
+        // Instanciar la base de datos
+        myDataBaseHelper = new MyDataBaseHelper(this);
+
+        // Cargar datos del perfil desde la base de datos
         cargarDatosPerfil();
 
-        buttonGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                guardarDatosPerfil();
+        // Llamar a actualizarPerfil() cuando se presiona el botón de guardar
+        buttonGuardar.setOnClickListener(v -> {
+            if (actualizarPerfil()) {
+                Toast.makeText(this, "Datos actualizados con éxito", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error al actualizar los datos", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // Método para cargar los datos del perfil desde la base de datos
+    private void cargarDatosPerfil() {
+        Log.d("EditarPerfil", "Método cargarDatosPerfil() llamado");
+
+        String emailUsuario = obtenerEmailUsuario(); // Método que obtiene el correo del usuario desde SharedPreferences
+
+        if (!emailUsuario.isEmpty()) {
+            Cursor cursor = myDataBaseHelper.obtenerDatosUsuario(emailUsuario);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                String nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"));
+                String apellido = cursor.getString(cursor.getColumnIndexOrThrow("apellido"));
+                String email = cursor.getString(cursor.getColumnIndexOrThrow("email"));
+
+                // Asigna los valores a los campos de texto
+                editTextNombre.setText(nombre);
+                editTextApellido.setText(apellido);
+                editTextCorreo.setText(email);
+                editTextContrasena.setText(""); // Limpiar el campo de contraseña
+            } else {
+                Toast.makeText(this, "No se encontraron datos para este usuario.", Toast.LENGTH_SHORT).show();
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+        } else {
+            Toast.makeText(this, "No hay sesión activa.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Método para obtener el correo del usuario desde SharedPreferences
+    private String obtenerEmailUsuario() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Perfil", MODE_PRIVATE);
+        return sharedPreferences.getString("correo", "");
+    }
+
+    // Método para actualizar los datos del perfil
+    private boolean actualizarPerfil() {
+        String emailUsuario = obtenerEmailUsuario();
+        String nombre = editTextNombre.getText().toString().trim();
+        String apellido = editTextApellido.getText().toString().trim();
+        String password = editTextContrasena.getText().toString().trim();
+
+        return myDataBaseHelper.actualizarDatosUsuario(emailUsuario, nombre, apellido, "", "", password);
     }
 
     @Override
@@ -52,23 +109,5 @@ public class EditarPerfil extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void cargarDatosPerfil() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Perfil", MODE_PRIVATE);
-        editTextNombre.setText(sharedPreferences.getString("nombre", ""));
-        editTextApellido.setText(sharedPreferences.getString("apellido", ""));
-        editTextCorreo.setText(sharedPreferences.getString("correo", ""));
-        editTextContrasena.setText(sharedPreferences.getString("contrasena", ""));
-    }
-
-    private void guardarDatosPerfil() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Perfil", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("nombre", editTextNombre.getText().toString());
-        editor.putString("apellido", editTextApellido.getText().toString());
-        editor.putString("correo", editTextCorreo.getText().toString());
-        editor.putString("contrasena", editTextContrasena.getText().toString());
-        editor.apply();
     }
 }
