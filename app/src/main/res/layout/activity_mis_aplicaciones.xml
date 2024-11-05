@@ -147,6 +147,7 @@
         android:layout_marginBottom="36dp"
         android:clickable="true"
         android:contentDescription="@string/fab_description"
+        android:focusable="true"
         app:backgroundTint="#2196F3"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"

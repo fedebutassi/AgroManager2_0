@@ -169,7 +169,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_viewLaboresHome"
         android:layout_width="409dp"
-        android:layout_height="521dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/signomas"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         tools:ignore="MissingConstraints"
