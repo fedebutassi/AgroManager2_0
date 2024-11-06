@@ -1,17 +1,12 @@
 package com.example.agromanager2_0;
 
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.annotation.SuppressLint;
+import android.content.*;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.view.*;
+import android.widget.*;
 
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,47 +15,124 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.agromanager2_0.lotes.*;
+import com.example.agromanager2_0.database.MyDataBaseHelper;
+import com.example.agromanager2_0.aplicaciones.AplicacionActivity;
+import com.example.agromanager2_0.cultivos.CultivoActivity;
 import com.example.agromanager2_0.labores.LaboresActivity;
-import com.example.agromanager2_0.lotes.NuevoLoteActivity;
+import com.example.agromanager2_0.settings.SettingsActivity;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.app.Activity;
+
+import java.util.ArrayList;
 
 public class Home extends AppCompatActivity {
-
-    private boolean loteCreado = false; // Controla si hay un lote creado
-
+    private LoteAdapter loteAdapter;
+    private final ArrayList<Lote> listaLotes = new ArrayList<>();
+    private MyDataBaseHelper miDb;
     private ActivityResultLauncher<Intent> loteActivityLauncher;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        miDb = new MyDataBaseHelper(this);
+
         loteActivityLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        loteCreado = true; // Indica que se creó un lote
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        cargarLotes(); // Carga los lotes al volver
                     }
                 }
         );
+        RecyclerView recyclerViewLotes = findViewById(R.id.recycler_viewLotesHome);
+        recyclerViewLotes.setLayoutManager(new LinearLayoutManager(this));
 
-        ImageButton imageButton5 = findViewById(R.id.signomas);
-        imageButton5.setOnClickListener(v -> showBottomSheetDialog(v));
+        loteAdapter = new LoteAdapter(listaLotes, miDb, this);
+        recyclerViewLotes.setAdapter(loteAdapter);
 
-        Button buttonMenuSuperior = findViewById(R.id.menuSuperior);
-        buttonMenuSuperior.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view2){
-                showBottomSheetDialog2(view2);
+        cargarLotes(); // Carga los lotes inicialmente
+
+        @SuppressLint("CutPasteId") ImageButton imageButton5 = findViewById(R.id.signomas);
+        imageButton5.setOnClickListener(v -> showBottomSheetDialog());
+
+        ImageButton buttonMenuSuperior = findViewById(R.id.menu_button);
+        buttonMenuSuperior.setOnClickListener(view2 -> showBottomSheetDialog2());
+
+        ImageButton avatarMiPerfil = findViewById(R.id.avatar_button);
+        avatarMiPerfil.setOnClickListener(view3 -> irAMiPerfil());
+
+        @SuppressLint("CutPasteId") FloatingActionButton fab = findViewById(R.id.signomas);
+        fab.setContentDescription("Añadir nuevo elemento");
+
+        ImageButton irAMisLabores = findViewById(R.id.imageButton2);
+        irAMisLabores.setOnClickListener(view4 -> irAMisLabores());
+
+        ImageButton imageButton = findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(view -> accesoACultivos());
+
+        ImageButton imageButton3 = findViewById(R.id.imageButton3);
+        imageButton3.setOnClickListener(view -> accesoAAplicaciones());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarLotes(); // Carga los lotes cada vez que se reanuda la actividad
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void cargarLotes() {
+        listaLotes.clear(); // Limpia la lista antes de cargar
+        Cursor cursor = miDb.obtenerLotes();
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String nombreLote = cursor.getString(1);
+                double hectareas = cursor.getDouble(2);
+                double latitud = cursor.getDouble(3);
+                double longitud = cursor.getDouble(4);
+                LatLng ubicacion = new LatLng(latitud, longitud);
+
+                Lote lote = new Lote(nombreLote, hectareas, ubicacion);
+                listaLotes.add(lote);
             }
-        });
-
-
+            loteAdapter.notifyDataSetChanged(); // Notifica al adaptador que los datos han cambiado
+        }
+        if (cursor != null) {
+            cursor.close(); // Cierra el cursor para evitar fugas de memoria
+        }
     }
 
 
-    private void showBottomSheetDialog(View view) {
+    public void irAMisLabores(){
+        Intent intent = new Intent(this, MisLabores.class);
+        startActivity(intent);
+    }
+
+
+    public void irAMiPerfil(){
+        Intent intent = new Intent(this, MiPerfil.class);
+        startActivity(intent);
+    }
+
+    public void accesoACultivos(){
+        Intent intent = new Intent(this, MisCultivos.class);
+        startActivity(intent);
+    }
+
+    public void accesoAAplicaciones(){
+        Intent intent = new Intent(this, MisAplicaciones.class);
+        startActivity(intent);
+    }
+
+    private void showBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View bottomSheetView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.bottom_sheet_menu, null);
@@ -74,7 +146,7 @@ public class Home extends AppCompatActivity {
         });
 
         bottomSheetView.findViewById(R.id.nuevaLabor).setOnClickListener(v -> {
-            MenuItem fakeItem = new FakeMenuItem(R.id.menu_nueva_labor);
+            MenuItem fakeItem = new FakeMenuItem(R.id.menu_nueva_labor) ;
             onMenuItemClick(fakeItem);
             bottomSheetDialog.dismiss();
         });
@@ -95,22 +167,16 @@ public class Home extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    private boolean onMenuItemClick(MenuItem item) {
+    private void onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_nuevo_lote) {
             abrirNuevaPantalla("Lotes");
-            return true;
         } else if (id == R.id.menu_nueva_labor) {
             abrirNuevaPantalla("Labores");
-            return true;
         } else if (id == R.id.menu_nuevo_cultivo) {
             abrirNuevaPantalla("Cultivos");
-            return true;
         } else if (id == R.id.menu_nueva_aplicacion) {
             abrirNuevaPantalla("Aplicaciones");
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -120,21 +186,20 @@ public class Home extends AppCompatActivity {
         switch (pantalla) {
             case "Lotes":
                 intent = new Intent(this, NuevoLoteActivity.class);
-                // En lugar de startActivityForResult, usamos el launcher registrado
                 loteActivityLauncher.launch(intent);
                 break;
             case "Labores":
                 intent = new Intent(this, LaboresActivity.class);
                 startActivity(intent);
                 break;
-//            case "Aplicaciones": // Agregar este caso
-//                intent = new Intent(this, AplicacionesActivity.class);
-//                startActivity(intent);
-//                break;
-//            case "Cultivos":
-//                intent = new Intent(this, CultivosActivity.class);
-//                startActivity(intent);
-//                break;
+            case "Aplicaciones": // Agregar este caso
+                intent = new Intent(this, AplicacionActivity.class);
+                startActivity(intent);
+                break;
+            case "Cultivos":
+                intent = new Intent(this, CultivoActivity.class);
+                startActivity(intent);
+                break;
             default:
                 throw new IllegalArgumentException("Pantalla no reconocida: " + pantalla);
         }
@@ -144,34 +209,26 @@ public class Home extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            loteCreado = true; // Indica que se creo un lote
-        }
     }
 
-
-    private void openFormActivity(String tipo) {
-        Intent intent = new Intent(this, FormActivity.class);
-        intent.putExtra("tipo", tipo);
-        startActivity(intent);
-    }
-    /*Implementacion de menu desplegable con botones
-    *   "Configuracion"
-    *   "Editar perfil"
-    *   "Cerrar sesion"*/
-    private void showBottomSheetDialog2(View view2){
+    private void showBottomSheetDialog2(){
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-        View bottomSheetView = LayoutInflater.from(getApplicationContext())
+        @SuppressLint("InflateParams") View bottomSheetView = LayoutInflater.from(getApplicationContext())
                 .inflate(R.layout.menusuperior, null);
         bottomSheetDialog.setContentView(bottomSheetView);
 
         bottomSheetView.findViewById(R.id.configuracion).setOnClickListener(v ->{
-            openMenuSuperior("Configuracion");
+            // Crear un intent para abrir la actividad de configuración
+            Intent intent = new Intent(v.getContext(), SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            v.getContext().startActivity(intent);
+
+            // Cerrar el BottomSheet
             bottomSheetDialog.dismiss();
         });
 
         bottomSheetView.findViewById(R.id.editarPerfil).setOnClickListener(v ->{
-            openMenuSuperior("Editar Perfil");
+            openMenuSuperior();
             bottomSheetDialog.dismiss();
         });
 
@@ -180,19 +237,11 @@ public class Home extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
             builder.setMessage(R.string.preguntaUsuario);
 
-            builder.setPositiveButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+            builder.setPositiveButton(R.string.Cancelar, (dialogInterface, i) -> {
 
-                }
             });
 
-            builder.setNegativeButton(R.string.salirConfirmar, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                }
-            });
+            builder.setNegativeButton(R.string.salirConfirmar, (dialogInterface, i) -> cerrarSesionYSalir());
 
             builder.show();
         });
@@ -201,13 +250,27 @@ public class Home extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    private void openMenuSuperior(String tipo) {
+    private void cerrarSesionYSalir() {
+        // Eliminar los datos de sesión (por ejemplo, en SharedPreferences)
+        SharedPreferences sharedPreferences = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();  // Limpiar todos los datos de sesión
+        editor.apply();
+
+        // Mostrar un mensaje que la sesión se ha cerrado
+        Toast.makeText(Home.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+
+        // Finalizar todas las actividades y salir de la aplicación
+        finishAffinity();  // Cierra todas las actividades y sale de la app
+    }
+
+    private void openMenuSuperior() {
         Intent intent = new Intent(this, MenuSuperior.class);
-        intent.putExtra("tipo", tipo);
+        intent.putExtra("tipo", "Editar Perfil");
         startActivity(intent);
     }
 
-    class FakeMenuItem implements MenuItem {
+    static class FakeMenuItem implements MenuItem {
         private final int id;
 
         public FakeMenuItem(int id) {
@@ -431,4 +494,6 @@ public class Home extends AppCompatActivity {
         public boolean isVisible() { return false; }
         // ... otros métodos omitidos por simplicidad
     }
+
+
 }

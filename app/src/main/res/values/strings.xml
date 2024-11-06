@@ -5,4 +5,30 @@
     <string name="preguntaUsuario"> Esta seguro que desea salir de AgroManager?</string>
     <string name="Cancelar"> Cancelar </string>
     <string name="salirConfirmar"> Salir </string>
+
+    <!-- Opciones de frecuencia de sincronización -->
+    <string-array name="sync_frequency_options">
+        <item>15 Minutes</item>
+        <item>30 Minutes</item>
+        <item>1 Hour</item>
+        <item>4 Hours</item>
+    </string-array>
+
+    <!-- Valores de frecuencia de sincronización -->
+    <string-array name="sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+    </string-array>
+    <string name="fab_description">Añadir nuevo elemento</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="fecha_de_nacimiento">Fecha de Nacimiento</string>
+    <string name="localidad">Localidad</string>
+    <string name="email">Email</string>
+    <string name="mis_lotes">Mis lotes:</string>
+    <string name="mis_labores">Mis labores:</string>
+    <string name="mis_cultivos">Mis cultivos:</string>
+    <string name="mis_aplicaciones">Mis aplicaciones:</string>
 </resources>

@@ -1,49 +1,45 @@
 package com.example.agromanager2_0.labores;
 
 
-
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.agromanager2_0.R;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
+
+import com.example.agromanager2_0.database.MyDataBaseHelper;
 import com.example.agromanager2_0.lotes.Lote;
-import com.example.agromanager2_0.lotes.LoteStorage;
 
 public class LaboresActivity extends AppCompatActivity {
 
     private EditText nombreLaborEditText, descripcionLaborEditText;
     private Spinner spinnerLotes;
-    private Button fechaButton, guardarButton;
-    private RecyclerView recyclerViewLabores;
+    private Button fechaButton;
     private LaborAdapter laborAdapter;
     private List<Labor> listaLabores;
     private String fechaSeleccionada = "";
+    private MyDataBaseHelper miDb;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_labores);
 
+        miDb = new MyDataBaseHelper(this);
 
         // Habilitar el botón atrás en la ActionBar
         Toolbar toolbar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Labores");
 
         // Inicializar vistas
@@ -51,22 +47,29 @@ public class LaboresActivity extends AppCompatActivity {
         descripcionLaborEditText = findViewById(R.id.editTextDescripcionLabor);
         spinnerLotes = findViewById(R.id.spinnerLotes);
         fechaButton = findViewById(R.id.buttonSeleccionarFecha);
-        guardarButton = findViewById(R.id.buttonGuardarLabor);
-        recyclerViewLabores = findViewById(R.id.recyclerViewLabores);
+        Button guardarButton = findViewById(R.id.buttonGuardarLabor);
+        findViewById(R.id.recyclerViewLabores);
 
         // Cargar lotes en el Spinner
+        List<Lote> lotesDesdeDb = miDb.obtenerLotesLista();
         List<String> nombresLotes = new ArrayList<>();
-        for (Lote lote : LoteStorage.getLotes()) {
-            nombresLotes.add(lote.getNombre());
+        for (Lote lote : lotesDesdeDb) {
+            if (lote != null && lote.getNombre() != null) {  // Verifica que lote y nombre no sean nulos
+                nombresLotes.add(lote.getNombre());
+            }
         }
 
-        // Log para comprobar cuántos lotes se están cargando
-        Log.d("LaboresActivity", "Lotes disponibles: " + nombresLotes.size());
+        if (nombresLotes.isEmpty()) {
+            Log.d("CultivoActivity", "No se encontraron lotes en la base de datos.");
+            Toast.makeText(this, "No hay lotes disponibles.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.d("CultivoActivity", "Lotes disponibles: " + nombresLotes.size());
 
-        // Adaptador para el Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerLotes.setAdapter(adapter);
+            // Configura el ArrayAdapter y asigna al Spinner
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nombresLotes);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerLotes.setAdapter(adapter);
+        }
 
         // Inicializar la lista de labores una sola vez
         listaLabores = LaborStorage.getLabores();  // Carga las labores solo una vez
@@ -80,7 +83,7 @@ public class LaboresActivity extends AppCompatActivity {
 
 
         // Configura el adaptador con la lista de labores
-        laborAdapter = new LaborAdapter(listaLabores);
+        laborAdapter = new LaborAdapter(listaLabores,miDb,this);
         recyclerView.setAdapter(laborAdapter);
 
         // Configurar el botón para seleccionar la fecha
@@ -97,7 +100,7 @@ public class LaboresActivity extends AppCompatActivity {
                     // Verificar si la labor ya existe para evitar duplicados
                     boolean existeLabor = false;
                     for (Labor labor : listaLabores) {
-                        if (labor.getNombre().equals(nombreLabor) && labor.getFecha().equals(fechaSeleccionada)) {
+                        if (labor.getNombreLabor().equals(nombreLabor) && labor.getFecha().equals(fechaSeleccionada)) {
                             existeLabor = true;
                             break;
                         }
@@ -105,25 +108,23 @@ public class LaboresActivity extends AppCompatActivity {
 
                     if (!existeLabor) {
                         // Crear nueva labor
-                        Labor nuevaLabor = new Labor(nombreLabor, fechaSeleccionada, loteSeleccionado, descripcion);
+                        Labor nuevaLabor = new Labor(nombreLabor, fechaSeleccionada, descripcion);
+                        boolean insertadoExitosamente = miDb.insertarDatosLabores(nombreLabor, descripcion, fechaSeleccionada);
 
-                        // Guardar la labor en LaborStorage
-                        LaborStorage.addLabor(nuevaLabor);
+                        if (insertadoExitosamente) {
+                            // Agregar directamente a la lista temporal
+                            listaLabores.add(nuevaLabor);
 
-                        // Agregar directamente a la lista temporal
-                        listaLabores.add(nuevaLabor);
+                            // Notificar al adaptador que los datos han cambiado
+                            laborAdapter.notifyDataSetChanged();
 
-                        // Verificación mediante Log
-                        Log.d("LaboresActivity", "Labor guardada: " + nuevaLabor.getNombre());
-                        Log.d("LaboresActivity", "Cantidad de labores guardadas: " + listaLabores.size());
+                            // Limpiar los campos después de guardar
+                            limpiarLabores();
 
-                        // Notificar al adaptador que los datos han cambiado
-                        laborAdapter.notifyDataSetChanged();
-
-                        // Limpiar los campos después de guardar
-                        limpiarCampos();
-
-                        Toast.makeText(this, "Labor guardada exitosamente", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Labor guardada exitosamente en la base de datos", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Error al guardar la labor en la base de datos", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(this, "Esta labor ya existe", Toast.LENGTH_SHORT).show();
                     }
@@ -163,7 +164,8 @@ public class LaboresActivity extends AppCompatActivity {
     }
 
     // Limpiar los campos del formulario
-    private void limpiarCampos() {
+    @SuppressLint("SetTextI18n")
+    private void limpiarLabores() {
         nombreLaborEditText.setText("");
         descripcionLaborEditText.setText("");
         spinnerLotes.setSelection(0);
@@ -174,7 +176,6 @@ public class LaboresActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
 
     }
 
