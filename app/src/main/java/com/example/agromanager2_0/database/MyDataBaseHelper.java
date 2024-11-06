@@ -238,6 +238,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         int result = db.update(TABLE_USUARIOS, contentValues, "email = ?", new String[]{email});
         return result > 0; // Retorna true si al menos una fila fue actualizada
     }
+
     public boolean eliminarLote(String nombreCampo) {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete(TABLE_CAMPOS, "nombre_campo = ?", new String[]{nombreCampo});
@@ -275,5 +276,6 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         );
         return rowsAffected > 0;
     }
+
 
 }
