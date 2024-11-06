@@ -58,7 +58,7 @@ public class MisLabores extends AppCompatActivity {
         RecyclerView recyclerViewLabores = findViewById(R.id.recycler_viewLaboresHome);
         recyclerViewLabores.setLayoutManager(new LinearLayoutManager(this));
 
-        laborAdapter = new LaborAdapter(listaLabores);
+        laborAdapter = new LaborAdapter(listaLabores,miDb,this);
         recyclerViewLabores.setAdapter(laborAdapter);
 
         cargarLabores(); // Carga los lotes inicialmente

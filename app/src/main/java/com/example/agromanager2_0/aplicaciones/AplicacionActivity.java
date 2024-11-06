@@ -23,7 +23,6 @@ public class AplicacionActivity extends AppCompatActivity {
     private EditText editTextAreaCubierta;
     private Spinner spinnerLotes;
     private Button fechaButton;
-    private AplicacionAdapter aplicacionAdapter;
     private List<Aplicacion> listaAplicaciones;
     private String fechaSeleccionada = "";
     private MyDataBaseHelper miDb;
@@ -86,7 +85,7 @@ public class AplicacionActivity extends AppCompatActivity {
 
 
         // Configura el adaptador con la lista de labores
-        aplicacionAdapter = new AplicacionAdapter((ArrayList<Aplicacion>) listaAplicaciones);
+        AplicacionAdapter aplicacionAdapter = new AplicacionAdapter((ArrayList<Aplicacion>) listaAplicaciones, miDb, this);
         recyclerView.setAdapter(aplicacionAdapter);
 
         fechaButton.setOnClickListener(v -> mostrarDatePicker());

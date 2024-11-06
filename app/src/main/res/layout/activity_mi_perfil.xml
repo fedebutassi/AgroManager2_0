@@ -18,9 +18,10 @@
         android:layout_height="659dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="1dp">
+        tools:ignore="MissingConstraints">
 
         <View
             android:layout_width="match_parent"
@@ -33,16 +34,16 @@
             android:text="Nombre:\n"
             android:textColor="@color/black"
             android:textSize="20sp"
-            tools:ignore="HardcodedText,TextSizeCheck"
-            >
-        </TextView>
+            tools:ignore="HardcodedText,TextSizeCheck"></TextView>
+
         <TextView
             android:id="@+id/nombreTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/nombre"
-            android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -57,12 +58,14 @@
             tools:ignore="HardcodedText,TextSizeCheck">
 
         </TextView>
+
         <TextView
             android:id="@+id/apellidoTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/apellido"
             android:textSize="18sp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -77,6 +80,7 @@
             tools:ignore="HardcodedText,TextSizeCheck">
 
         </TextView>
+
         <TextView
             android:id="@+id/fechaNacimientoTextView"
             android:layout_width="match_parent"
@@ -94,12 +98,14 @@
             tools:ignore="HardcodedText,TextSizeCheck">
 
         </TextView>
+
         <TextView
             android:id="@+id/localidadTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/localidad"
             android:textSize="18sp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -114,6 +120,7 @@
             tools:ignore="HardcodedText,TextSizeCheck">
 
         </TextView>
+
         <TextView
             android:id="@+id/emailTextView"
             android:layout_width="match_parent"

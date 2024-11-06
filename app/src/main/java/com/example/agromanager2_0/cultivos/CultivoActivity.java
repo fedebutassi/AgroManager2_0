@@ -72,7 +72,7 @@ public class CultivoActivity extends AppCompatActivity {
         }
 
         listaCultivos = CultivoStorage.getCultivos();
-        cultivoAdapter = new CultivoAdapter(listaCultivos);
+        cultivoAdapter = new CultivoAdapter(listaCultivos,miDb,this);
         recyclerViewCultivos.setAdapter(cultivoAdapter);
 
         fechaButton.setOnClickListener(view -> mostrarDatePicker()); // Método separado para el DatePicker

@@ -55,7 +55,7 @@ public class Home extends AppCompatActivity {
         RecyclerView recyclerViewLotes = findViewById(R.id.recycler_viewLotesHome);
         recyclerViewLotes.setLayoutManager(new LinearLayoutManager(this));
 
-        loteAdapter = new LoteAdapter(listaLotes);
+        loteAdapter = new LoteAdapter(listaLotes, miDb, this);
         recyclerViewLotes.setAdapter(loteAdapter);
 
         cargarLotes(); // Carga los lotes inicialmente

@@ -1,6 +1,7 @@
 package com.example.agromanager2_0;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.*;
 
@@ -56,6 +57,21 @@ public class Registro extends AppCompatActivity {
             if (nombreStr.isEmpty() || apellidoStr.isEmpty() || emailStr.isEmpty() || passwordStr.isEmpty()) {
                 Toast.makeText(Registro.this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
             }
+            if (isInserted) {
+                // Guardar los datos también en SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("Perfil", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("nombre", nombreStr);
+                editor.putString("apellido", apellidoStr);
+                editor.putString("correo", emailStr);
+                editor.putString("contrasena", passwordStr);
+                editor.apply();
+
+                Toast.makeText(Registro.this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(Registro.this, "Error al guardar los datos", Toast.LENGTH_SHORT).show();
+            }
+
 
         });
 

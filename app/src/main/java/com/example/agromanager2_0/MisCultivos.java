@@ -56,8 +56,7 @@ public class MisCultivos extends AppCompatActivity {
         RecyclerView recyclerViewCultivos = findViewById(R.id.recycler_viewCultivosHome);
         recyclerViewCultivos.setLayoutManager(new LinearLayoutManager(this));
 
-        cultivoAdapter = new CultivoAdapter(listaCultivos);
-        recyclerViewCultivos.setAdapter(cultivoAdapter);
+        cultivoAdapter = new CultivoAdapter(listaCultivos,miDb,this);        recyclerViewCultivos.setAdapter(cultivoAdapter);
 
         cargarCultivos(); // Carga los lotes inicialmente
 

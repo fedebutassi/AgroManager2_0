@@ -83,7 +83,7 @@ public class LaboresActivity extends AppCompatActivity {
 
 
         // Configura el adaptador con la lista de labores
-        laborAdapter = new LaborAdapter(listaLabores);
+        laborAdapter = new LaborAdapter(listaLabores,miDb,this);
         recyclerView.setAdapter(laborAdapter);
 
         // Configurar el botón para seleccionar la fecha

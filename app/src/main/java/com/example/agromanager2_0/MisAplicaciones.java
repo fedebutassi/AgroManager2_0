@@ -5,7 +5,6 @@ import android.content.*;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
@@ -54,11 +53,11 @@ public class MisAplicaciones extends AppCompatActivity {
                     }
                 }
         );
-        RecyclerView recyclerViewLabores = findViewById(R.id.recycler_viewAplicacionesHome);
-        recyclerViewLabores.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerViewAplicaciones = findViewById(R.id.recycler_viewAplicacionesHome);
+        recyclerViewAplicaciones.setLayoutManager(new LinearLayoutManager(this));
 
-        aplicacionAdapter = new AplicacionAdapter(listaAplicaciones);
-        recyclerViewLabores.setAdapter(aplicacionAdapter);
+        aplicacionAdapter = new AplicacionAdapter(listaAplicaciones, miDb, this);
+        recyclerViewAplicaciones.setAdapter(aplicacionAdapter);
 
         cargarAplicaciones(); // Carga los lotes inicialmente
 
@@ -103,9 +102,6 @@ public class MisAplicaciones extends AppCompatActivity {
                     listaAplicaciones.add(aplicacion);
                 }
                 aplicacionAdapter.notifyDataSetChanged();
-            }
-            if (cursor != null) {
-                cursor.close(); // Cierra el cursor para evitar fugas de memoria
             }
         }
     }

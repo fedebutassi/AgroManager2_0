@@ -35,4 +35,9 @@ public class Cultivo {
     public String getDescripcionCultivo() {
         return descripcionCultivo;
     }
+
+    public String getNombre() {
+        return null;
+    }
+
 }

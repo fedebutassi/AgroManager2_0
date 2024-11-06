@@ -50,7 +50,7 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewLotes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        loteAdapter = new LoteAdapter(listaLotes);
+        loteAdapter = new LoteAdapter(listaLotes, miDb, this);
         recyclerView.setAdapter(loteAdapter);
 
         cargarLotes();

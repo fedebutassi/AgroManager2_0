@@ -224,4 +224,56 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
         return listaLotes;
     }
 
+    public boolean actualizarDatosUsuario(String email, String nombre, String apellido, String fechaNacimiento, String localidad, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("nombre", nombre);
+        contentValues.put("apellido", apellido);
+        contentValues.put("fecha_nacimiento", fechaNacimiento);
+        contentValues.put("localidad", localidad);
+        contentValues.put("password", password);
+
+        // Devuelve el número de filas afectadas por la actualización
+        int result = db.update(TABLE_USUARIOS, contentValues, "email = ?", new String[]{email});
+        return result > 0; // Retorna true si al menos una fila fue actualizada
+    }
+    public boolean eliminarLote(String nombreCampo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int result = db.delete(TABLE_CAMPOS, "nombre_campo = ?", new String[]{nombreCampo});
+        return result > 0; // Devuelve true si se eliminó al menos una fila
+    }
+
+    public boolean eliminarCultivo(String nombre_cultivo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Verifica que la columna y la tabla sean correctas
+        int rowsAffected = db.delete(
+                "Cultivos",               // Nombre de la tabla
+                "nombre_cultivo = ?",             // Condición WHERE (nombre del cultivo)
+                new String[] { nombre_cultivo }   // Parámetro a vincular (el nombre del cultivo)
+        );
+
+        return rowsAffected > 0; // Devuelve true si se eliminó al menos una fila
+    }
+    public boolean eliminarLabor(String nombre_labor) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(
+                "Labores",
+                "nombre_labor = ?",
+                new String[] { nombre_labor }
+        );
+        return rowsAffected > 0;
+    }
+
+    public boolean eliminarAplicacion(String nombre_producto) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsAffected = db.delete(
+                "Productos_Aplicados",
+                "nombre_producto = ?",
+                new String[] { nombre_producto }
+        );
+        return rowsAffected > 0;
+    }
+
 }
