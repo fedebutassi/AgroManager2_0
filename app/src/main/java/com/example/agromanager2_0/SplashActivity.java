@@ -16,14 +16,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Tiempo de espera en milisegundos
         int tiempoEspera = 3000; // 3 segundos
 
-        // Usamos un Handler para esperar el tiempo y luego iniciar MainActivity
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(intent);
-            finish(); // Cierra SplashActivity
+            finish();
         }, tiempoEspera);
     }
 }

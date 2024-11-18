@@ -55,7 +55,6 @@ public class NuevoLoteActivity extends AppCompatActivity implements OnMapReadyCa
 
         cargarLotes();
 
-        // Inicializar el fragmento del mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);

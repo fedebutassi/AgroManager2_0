@@ -49,7 +49,7 @@ public class MisCultivos extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        cargarCultivos(); // Carga los lotes al volver
+                        cargarCultivos();
                     }
                 }
         );
@@ -58,7 +58,7 @@ public class MisCultivos extends AppCompatActivity {
 
         cultivoAdapter = new CultivoAdapter(listaCultivos,miDb,this);        recyclerViewCultivos.setAdapter(cultivoAdapter);
 
-        cargarCultivos(); // Carga los lotes inicialmente
+        cargarCultivos();
 
         ImageButton imageButton5 = findViewById(R.id.signomas);
         imageButton5.setOnClickListener(v -> showBottomSheetDialog());
